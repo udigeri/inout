@@ -1,0 +1,17 @@
+development:
+  log_level: debug
+  log_file_path: ./inout.log 
+  web:
+    port: 5000
+  src:
+    data_file: ./inout.log
+  dst:
+    data_file: ./inout.txt
+
+production:
+  log_level: info
+  log_file_path: ./inout.log
+  src:
+    data_file: inout.log
+  dst:
+    data_file: ./inout.txt
