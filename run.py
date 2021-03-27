@@ -12,7 +12,7 @@ def close(error):
 
 @flsk.route('/')
 def index():
-    entries = [{"id":1, "title":"Initial message", "text":"Very nice app"}]
+    entries = [{"id":1, "title":"Choose your car", "text":"You have to be logged in"}]
     return render_template('index.html', entries=entries)
 
 @flsk.route('/login', methods=['GET', 'POST'])
@@ -25,30 +25,50 @@ def login():
             error = 'Invalid password'
         else:
             session['logged_in'] = True
-            flash('You were logged in')
+            flash('You were logged in', category='success')
             return redirect(url_for('index'))
     return render_template('login.html', error=error)
 
 @flsk.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    flash('You were logged out')
+    flash('You were logged out', category='success')
     return redirect(url_for('index'))
 
-@flsk.route('/ZA864KL')
-def ZA864KL():
-    flash('ZA864KL')
-    flash('Parking fee 3,50 EUR')
+
+@flsk.route('/cart', methods=['GET', 'POST'])
+def cart():
+    flash('Payment method(s)', category='success')
     return redirect(url_for('index'))
 
-@flsk.route('/BL235PP')
-def BL235PP():
-    flash('BL235PP')
-    flash('Parking fee 1,00 EUR')
-    return redirect(url_for('index'))
+@flsk.route('/pay', methods=['GET', 'POST'])
+def pay():
+    shopping_cart = None
+    resp = web.get_cart(request.form['pp'], request.form['lpn'], request.form['amount'])
+    if resp.status_code != 200:
+        flash('Generate shopping cart failed', category='error')
+    else:
+        for cart_item in resp.json():
+            try:
+                shopping_cart = cart_item['cartid']
+                flash('Generate shopping cart success', category='success')
+            except Exception:
+                flash('Generate shopping cart error', category='error')
+    return render_template('cart.html', shopping_cart=shopping_cart)
 
-@flsk.route('/BY698LT')
-def BY698LT():
+
+@flsk.route('/ParkPlace_1')
+def ParkPlace_1():
+    customer = {"id":"ParkPlace_1", "lpn":"ZA864KL", "amount":"3.50"}
+    return render_template('pay.html', customer=customer)
+
+@flsk.route('/ParkPlace_2')
+def ParkPlace_2():
+    customer = {"id":"ParkPlace_2", "lpn":"BL235PP", "amount":"1.00"}
+    return render_template('pay.html', customer=customer)
+
+@flsk.route('/ParkPlace_3')
+def ParkPlace_3():
     flash('BY698LT')
     flash('You can leave in 10 minutes')
     return redirect("https:\\www.google.com")
@@ -57,7 +77,7 @@ def BY698LT():
 def add_entry():
     if not session.get('logged_in'):
         abort(401)
-    flash('New entry was successfully posted')
+    flash('New entry was successfully posted', category='success')
     return redirect(url_for('index'))
         
 @flsk.route('/delete/<post_id>', methods=['GET'])

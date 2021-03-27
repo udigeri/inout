@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>InOut</title>
+  <title>InOut | Pay</title>
   <link rel="icon" href="../static/favicon.png" sizes="16x16"> 
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="page">
-    <h1>Welcome to InOut Parking lot</h1>
+    <h1>InOut Parking lot</h1>
    <div class="metanav">
       {% if not session.logged_in %}
         <a href="{{ url_for('login') }}">log in</a>
@@ -20,13 +20,12 @@
       <img src="../static/parking_place.png" alt="..." width="500" height="500" usemap="#parkingmap" />
       {% if session.logged_in %}
         <map name="parkingmap">
-          <area shape="rect" coords="142,43,210,202" alt="ZA864KL" href="{{ url_for('ParkPlace_1') }}">
-          <area shape="rect" coords="231,43,296,190" alt="BL235PP" href="{{ url_for('ParkPlace_2') }}">
-          <area shape="rect" coords="319,46,384,190" alt="BY698LT" href="{{ url_for('ParkPlace_3') }}">
+          <area shape="rect" coords="142,43,210,202" href="{{ url_for('ParkPlace_1') }}">
+          <area shape="rect" coords="231,43,296,190" href="{{ url_for('ParkPlace_2') }}">
+          <area shape="rect" coords="319,46,384,190" href="{{ url_for('ParkPlace_3') }}">
         </map>
       {% endif %}
     </p>
-
 
     {% for message in get_flashed_messages(category_filter=["error"]) %}
     <div class="error">{{ message }}</div>
@@ -39,27 +38,20 @@
     {% block body %}{% endblock %}
 
     {% if session.logged_in %}
-      <form action="{{ url_for('add_entry') }}" method="post" class="add-entry">
+      <form action="{{ url_for('pay') }}" method="post" class="add-entry">
         <dl>
-          <dt>Title:</dt>
-          <dd><input type="text" size="30" name="title"></dd>
-          <dt>Text:</dt>
-          <dd><textarea name="text" rows="5" cols="40"></textarea></dd>
-          <dd><input type="submit" value="Share"></dd>
+          <dt>License plate:</dt>
+          <dd>{{ customer.lpn|safe }}</dd>
+          <dt>Amount:</dt>
+          <dd>{{ customer.amount|safe }} EUR</dd>
+          <input name="pp" type="hidden" size="0" value="{{ customer.id|safe }}">
+          <input name="lpn" type="hidden" size="0" value="{{ customer.lpn|safe }}">
+          <input name="amount" type="hidden" size="0" value="{{ customer.amount|safe }}">
+          <dd><input type="submit" value="Pay"></dd>
         </dl>
       </form>
     {% endif %}
 
-    <ul class="entries">
-      {% for entry in entries %}
-      <li class="entry">
-        <h2 id="{{ entry.id }}">{{ entry.title }}</h2>
-        {{ entry.text|safe }}
-      </li>
-      {% else %}
-        <li><em>No entries yet. Add some!</em></li>
-      {% endfor %}
-    </ul>
   </div>
   <script type="text/javascript" src="{{url_for('static', filename='main.js') }}"></script>
 </body>

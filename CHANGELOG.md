@@ -12,7 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- 
+- REST module for GET, PUT, POST, DELETE
+- implementation for REST API for getting cartid
 
 ## [0.1.0](https://github.com/udigeri/inout/tree/v0.1.0) (2021-03-27)
 

@@ -2,16 +2,23 @@ development:
   log_level: debug
   log_file_path: ./inout.log 
   web:
-    port: 5000
-  src:
-    data_file: ./inout.log
-  dst:
-    data_file: ./inout.txt
+  port: 5000
+  provider:
+    TrustCommerce:
+      tenant: pgs-testTrustCommerce
+      shop: shop-InOut
+      baseURL: http://localhost:3000
+      successURL: /approved
+      failureURL: /declined
 
 production:
   log_level: info
   log_file_path: ./inout.log
-  src:
-    data_file: inout.log
-  dst:
-    data_file: ./inout.txt
+  port: 5000
+  provider:
+    TrustCommerce:
+      tenant: pgs-testTrustCommerce
+      shop: shop-InOut
+      baseURL: http://localhost:3000
+      successURL: /approved
+      failureURL: /declined
