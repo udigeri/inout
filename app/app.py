@@ -12,8 +12,11 @@ class App(object):
         self.logger = InOutLogger(self.config, version)
         self.logger.info(self.APP_INITIAL_MSG)
 
-    def run(self):
-        www = Web(self.config, self.logger)
+    def run(self, application):
+        self.application = application
+        self.application.run(self.config, self.logger)
 
     def finished(self):
         self.logger.info(self.APP_INITIAL_MSG + " finished")
+
+

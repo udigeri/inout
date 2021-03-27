@@ -12,7 +12,10 @@ class Config():
         if not hasattr(self, 'log_level'): 
             setattr(self, 'log_level', 'info')
         if not hasattr(self, 'log_file_path'): 
-            setattr(self, 'log_file_path', './inout.log ')
+            setattr(self, 'log_file_path', './inout.log')
+
+        if not hasattr(self, 'web_port'): 
+            setattr(self, 'web_port', '5000')
 
     def _parse_section(self, key, value):
         if type(value) == dict:

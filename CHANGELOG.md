@@ -18,7 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added 
 
-- Added base structure of app
+- Base structure of app
   - Reading configuration file
   - Initial settings for logging into file/console
+- Web module using Flask
+  - initial www for parking lot
 
