@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>InOut | Cart</title>
+  <title>InOut | Transaction</title>
   <link rel="icon" href="../static/favicon.png" sizes="16x16"> 
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="page">
-    <h1>InOut Parking lot - Shopping cart</h1>
+    <h1>InOut Parking lot - Transaction</h1>
    <div class="metanav">
       {% if not session.logged_in %}
         <a href="{{ url_for('login') }}">log in</a>

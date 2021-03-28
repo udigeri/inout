@@ -1,47 +1,61 @@
 # # import os
 import sqlite3
 import requests
-from flask import Flask, request, session, g, redirect, url_for, \
-                  abort, render_template, flash, jsonify
+from requests.auth import HTTPBasicAuth
+import json
+from flask import Flask
 from .api.pgs import Pgs
 
 class Web():
-    # configuration
-    DATABASE = 'flaskr.db'
     SECRET_KEY = 'my_precious'
-    USERNAME = 'admin'
-    PASSWORD = 'admin'
 
     def __init__(self, host='0.0.0.0', port=5000, debug=False):
-        self.host = host    
+        self.host = host
         self.port = port
         self.debug = debug
-        # scriptdir=os.path.dirname(os.path.abspath(__file__))
+        self.username = None
+        self.password = None
         self.flsk = Flask(__name__)
         self.flsk.config.from_object(self)
 
     def run(self, config, logger):
         self.config = config
         self.logger = logger
-        self.pgs = Pgs(self.config)
+        self.pgs = Pgs(self.config, self.logger)
         self.port = getattr(self.config, "web_port")
         logger.info(f"Web module started on {self.host} :{self.port}")
+        # http
         self.flsk.run(host=self.host, port=self.port, debug=self.debug)
+        # https
+        # self.flsk.run(host=self.host, port=self.port, debug=self.debug, ssl_context='adhoc')
+
+    def _getAuthenticationURL(self):
+        return self.pgs._getHost()
+
+    def getAuthentication(self, usr, pwd):
+        self.username = usr
+        self.password = pwd
+
+        error = None
+        self.pgs.setAuth(HTTPBasicAuth(usr, pwd))
+        try:
+            rsp = requests.get(self._getAuthenticationURL(), auth=HTTPBasicAuth(usr, pwd))
+        except Exception as err:
+            error = "Authentication failed {}".format(err)
+            self.logger.error(error)
+        if rsp.status_code != 404:
+            error = "Authentication failed Status code {} {}".format(rsp.status_code, self._getAuthenticationURL())
+            self.logger.warning(error)
+        else:
+            self.logger.info("Web Authentication success")
+        return error
 
     def get_cart(self, pp, lpn, amount):
-        self.logger.info(f"Get shopping cart for {pp} {lpn} amount {amount}")
-        response = self.pgs.get_shopping_cart(pp, lpn, amount)
-        self.logger.info(f'get_cart response status code {response.status_code}')
-        if response.status_code == 200:
-            for cart_item in response.json():
-                try:
-                    self.logger.info(f'Provided shopping cart {cart_item["cartid"]}')
-                except KeyError as err:
-                    self.logger.error(err)
-        return response
+        self.logger.info(f"Web shopping cart for {pp} {lpn} amount {amount}")
 
-        # task = {"summary": "Take out trash", "description": "" }
-        # resp = requests.post('http://localhost:3000/', data=json.dumps(task), )
-        # if resp.status_code != 201:
-        #     raise ApiError('POST /posts/ {}'.format(resp.status_code))
-        # print('Created task. ID: {}'.format(resp.json()["id"]))
+        response = self.pgs.get_shopping_cart(pp, lpn, amount)
+        if response.status_code == 200:
+            data = json.loads(response.text)
+            for key in data:
+                self.logger.info('Provided shopping cart {cartId}'.format(cartId=data['cartId'])) 
+        return response

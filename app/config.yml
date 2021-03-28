@@ -5,11 +5,14 @@ development:
   port: 5000
   provider:
     TrustCommerce:
-      tenant: pgs-testTrustCommerce
+      tenant: pgs-testPayVision
       shop: shop-InOut
-      baseURL: http://localhost:3000
-      successURL: /approved
-      failureURL: /declined
+      host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
+      baseURL: /pgs/public/api/payment
+      successURL: http://localhost:5000/approved
+      failureURL: http://localhost:5000/declined
+      locale: en-Gb
+      costCentre: 2014615
 
 production:
   log_level: info
@@ -17,8 +20,11 @@ production:
   port: 5000
   provider:
     TrustCommerce:
-      tenant: pgs-testTrustCommerce
+      tenant: pgs-testPayVision
       shop: shop-InOut
-      baseURL: http://localhost:3000
+      host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
+      baseURL: /pgs/public/api/payment
       successURL: /approved
       failureURL: /declined
+      locale: en-Gb
+      costCentre: 2014615

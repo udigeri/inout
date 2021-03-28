@@ -12,6 +12,10 @@ body {
     margin: 0;
   }
   
+  p {
+    margin: 5px;
+  }
+  
   h1 {
     border-bottom: 2px solid #eee;
   }
@@ -43,12 +47,32 @@ body {
   }
   
   .add-entry {
-    font-size: 0.9em;
+    font-size: 1.2em;
     border-bottom: 1px solid #ccc;
   }
   
   .add-entry dl {
     font-weight: bold;
+  }
+  
+  .add-entry input[type=submit] {
+    width: 100%;
+    background-color: #676959;
+    font-size: 1.0em;
+    font-weight: bold;
+    color: white;
+    padding: 8px 20px;
+    margin: 4px 0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .add-entry input[type=submit]:hover {
+    background-color: #d3d032;
+    font-size: 1.0em;
+    font-weight: bold;
+    color: black;
   }
   
   .metanav {
@@ -69,3 +93,4 @@ body {
     background: #F0D6D6;
     padding: 0.5em;
   }
+

@@ -1,10 +1,12 @@
 import argparse
 from app import App, Web
-from flask import Flask, request, session, g, redirect, url_for, \
-                  abort, render_template, flash, jsonify
+from flask import Flask, request, session, redirect, url_for, \
+                  abort, render_template, flash
+import json
 
 web = Web()
 flsk = web.flsk
+
 
 @flsk.teardown_appcontext
 def close(error):
@@ -12,83 +14,151 @@ def close(error):
 
 @flsk.route('/')
 def index():
-    entries = [{"id":1, "title":"Choose your car", "text":"You have to be logged in"}]
+    if session.get('logged_in'):
+        entries = [{"id":1, "title":"Choose your car", "text":"You will see if you need to pay"}]
+    else:
+        entries = [{"id":2, "title":"", "text":""}]
     return render_template('index.html', entries=entries)
 
 @flsk.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] != flsk.config['USERNAME']:
-            error = 'Invalid username'
-        elif request.form['password'] != flsk.config['PASSWORD']:
-            error = 'Invalid password'
+        username = request.form['username']
+        password = request.form['password']
+        if username and password:
+            rsp = web.getAuthentication(username, password)
+            if rsp:
+                error = rsp
+            else:
+                session['logged_in'] = True
+                flash('You were logged in', category='success')
+                return redirect(url_for('index'))
         else:
-            session['logged_in'] = True
-            flash('You were logged in', category='success')
-            return redirect(url_for('index'))
+            error = "Missing credentials"
+
     return render_template('login.html', error=error)
 
 @flsk.route('/logout')
 def logout():
+    if not session.get('logged_in'):
+        abort(401)
     session.pop('logged_in', None)
     flash('You were logged out', category='success')
     return redirect(url_for('index'))
 
+@flsk.route('/trx')
+def trx():
+    if not session.get('logged_in'):
+        abort(401)
+    return render_template('trx.html')
+
+@flsk.route('/approved')
+def approved():
+    if not session.get('logged_in'):
+        abort(401)
+    flash('Approved', category='success')
+    return redirect(url_for('trx'))
+
+@flsk.route('/declined')
+def declined():
+    if not session.get('logged_in'):
+        abort(401)
+    flash('Declined', category='error')
+    return redirect(url_for('trx'))
+
 
 @flsk.route('/cart', methods=['GET', 'POST'])
 def cart():
+    if not session.get('logged_in'):
+        abort(401)
     flash('Payment method(s)', category='success')
     return redirect(url_for('index'))
 
 @flsk.route('/pay', methods=['GET', 'POST'])
 def pay():
+    if not session.get('logged_in'):
+        abort(401)
     shopping_cart = None
     resp = web.get_cart(request.form['pp'], request.form['lpn'], request.form['amount'])
-    if resp.status_code != 200:
-        flash('Generate shopping cart failed', category='error')
+    data = json.loads(resp.text)
+    for key in data:
+        if key == 'cartId':
+            shopping_cart = data['cartId']
+        elif key == 'code':
+            code = data['code']
+        elif key == 'status':
+            status = data['status']
+ 
+    if resp.status_code == 200:
+        for key in data:
+            if key == 'cartId':
+                shopping_cart = data['cartId']
+                flash(f'Shopping cart: {shopping_cart}', category='success')
     else:
-        for cart_item in resp.json():
-            try:
-                shopping_cart = cart_item['cartid']
-                flash('Generate shopping cart success', category='success')
-            except Exception:
-                flash('Generate shopping cart error', category='error')
+        flash(f'Generate shopping cart failed - {status} {code}', category='error')
+
     return render_template('cart.html', shopping_cart=shopping_cart)
 
 
 @flsk.route('/ParkPlace_1')
 def ParkPlace_1():
-    customer = {"id":"ParkPlace_1", "lpn":"ZA864KL", "amount":"3.50"}
+    if not session.get('logged_in'):
+        abort(401)
+    customer = {"id":"ParkPlace_1", "lpn":"ZA 864KL", "amount":"250", "display_amount":"2,50"}
     return render_template('pay.html', customer=customer)
 
 @flsk.route('/ParkPlace_2')
 def ParkPlace_2():
-    customer = {"id":"ParkPlace_2", "lpn":"BL235PP", "amount":"1.00"}
+    if not session.get('logged_in'):
+        abort(401)
+    customer = {"id":"ParkPlace_2", "lpn":"BL 235PP", "amount":"1400", "display_amount":"14,00"}
     return render_template('pay.html', customer=customer)
 
 @flsk.route('/ParkPlace_3')
 def ParkPlace_3():
-    flash('BY698LT')
-    flash('You can leave in 10 minutes')
-    return redirect("https:\\www.google.com")
-
-@flsk.route('/add', methods=['POST'])
-def add_entry():
     if not session.get('logged_in'):
         abort(401)
-    flash('New entry was successfully posted', category='success')
+    customer = {"id":"ParkPlace_3", "lpn":"BY 698LT", "amount":"0", "display_amount":"0,00"}
+    flash('BY 698LT - You can leave in 10 minutes')
     return redirect(url_for('index'))
-        
-@flsk.route('/delete/<post_id>', methods=['GET'])
-def delete_entry(post_id):
-    result = {'status': 0, 'message': 'Error'}
-    try:
-        result = {'status': 1, 'message': "Post Deleted"}
-    except Exception as e:
-        result = {'status': 0, 'message': repr(e)}
-    return jsonify(result)
 
+@flsk.route('/ParkPlace_4')
+def ParkPlace_4():
+    if not session.get('logged_in'):
+        abort(401)
+    customer = {"id":"ParkPlace_4", "lpn":"FREE", "amount":"50", "display_amount":"0,80"}
+    flash('You can Reserve parking place for next 2 hour')
+    return render_template('pay.html', customer=customer)
+
+@flsk.route('/ParkPlace_5')
+def ParkPlace_5():
+    if not session.get('logged_in'):
+        abort(401)
+    customer = {"id":"ParkPlace_5", "lpn":"MG TW777", "amount":"840", "display_amount":"8,40"}
+    return render_template('pay.html', customer=customer)
+
+@flsk.route('/ParkPlace_6')
+def ParkPlace_6():
+    if not session.get('logged_in'):
+        abort(401)
+    customer = {"id":"ParkPlace_6", "lpn":"3 SAM 123", "amount":"4200", "display_amount":"42,00"}
+    return render_template('pay.html', customer=customer)
+
+@flsk.route('/ParkPlace_7')
+def ParkPlace_7():
+    if not session.get('logged_in'):
+        abort(401)
+    customer = {"id":"ParkPlace_7", "lpn":"FREE", "amount":"50", "display_amount":"0,50"}
+    flash('You can Reserve parking place for next 1 hour')
+    return render_template('pay.html', customer=customer)
+
+@flsk.route('/ParkPlace_8')
+def ParkPlace_8():
+    if not session.get('logged_in'):
+        abort(401)
+    customer = {"id":"ParkPlace_8", "lpn":"KY 68 WZM", "amount":"11680", "display_amount":"116,80"}
+    return render_template('pay.html', customer=customer)
 
 
 
