@@ -8,13 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### ToDo
-- [ ] 
+
+## [0.2.0](https://github.com/udigeri/inout/tree/v0.2.0) (2021-03-30)
 
 ### Added
 
-- REST module for GET, PUT, POST, DELETE
-- implementation for REST API for getting shopping cart complete
+- dockerfile(s)
+- implementation of direct payment
 - improved style of web page
+- implementation for REST API for getting shopping cart complete
+- REST module for GET, PUT, POST, DELETE
 
 ## [0.1.0](https://github.com/udigeri/inout/tree/v0.1.0) (2021-03-27)
 

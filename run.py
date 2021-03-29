@@ -3,6 +3,7 @@ from app import App, Web
 from flask import Flask, request, session, redirect, url_for, \
                   abort, render_template, flash
 import json
+import os
 
 web = Web()
 flsk = web.flsk
@@ -14,10 +15,13 @@ def close(error):
 
 @flsk.route('/')
 def index():
+    env = os.environ.get('HOSTNAME')
+    #flash(f'Hostname {env}', category='success')
+
     if session.get('logged_in'):
         entries = [{"id":1, "title":"Choose your car", "text":"You will see if you need to pay"}]
     else:
-        entries = [{"id":2, "title":"", "text":""}]
+        entries = [{"id":2, "title":"Container", "text":f"{env}"}]
     return render_template('index.html', entries=entries)
 
 @flsk.route('/login', methods=['GET', 'POST'])
@@ -68,6 +72,7 @@ def declined():
     return redirect(url_for('trx'))
 
 
+
 @flsk.route('/cart', methods=['GET', 'POST'])
 def cart():
     if not session.get('logged_in'):
@@ -95,10 +100,16 @@ def pay():
             if key == 'cartId':
                 shopping_cart = data['cartId']
                 flash(f'Shopping cart: {shopping_cart}', category='success')
+        resp = web.get_pay_methods(shopping_cart)
+        data = json.loads(resp.text)
+        method = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='name']
+        urls = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='formUrl']
     else:
+        method=[]
+        urls=[]
         flash(f'Generate shopping cart failed - {status} {code}', category='error')
 
-    return render_template('cart.html', shopping_cart=shopping_cart)
+    return render_template('cart.html', shopping_cart=shopping_cart, len=len(method), method=method, urls=urls)
 
 
 @flsk.route('/ParkPlace_1')
@@ -179,6 +190,10 @@ if __name__ == "__main__":
                                 action='store',
                                 default="production",
                                 help='Define execution environment (default: %(default)s)')
+    parser.add_argument('-p', '--port', dest='web_port',
+                                action='store',
+                                default="1202",
+                                help='Define web server port (default: %(default)s)')
 
     app = App(__version__, parser.parse_args())
     app.run(web)

@@ -2,29 +2,29 @@ development:
   log_level: debug
   log_file_path: ./inout.log 
   web:
-  port: 5000
+  port: 1202
   provider:
     TrustCommerce:
       tenant: pgs-testPayVision
       shop: shop-InOut
       host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
       baseURL: /pgs/public/api/payment
-      successURL: http://localhost:5000/approved
-      failureURL: http://localhost:5000/declined
+      successURL: http://localhost:1202/approved
+      failureURL: http://localhost:1202/declined
       locale: en-Gb
       costCentre: 2014615
 
 production:
   log_level: info
   log_file_path: ./inout.log
-  port: 5000
+  port: 1202
   provider:
     TrustCommerce:
       tenant: pgs-testPayVision
       shop: shop-InOut
       host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
       baseURL: /pgs/public/api/payment
-      successURL: /approved
-      failureURL: /declined
+      successURL: http://localhost:1202/approved
+      failureURL: http://localhost:1202/declined
       locale: en-Gb
       costCentre: 2014615

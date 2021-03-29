@@ -9,7 +9,7 @@ from .api.pgs import Pgs
 class Web():
     SECRET_KEY = 'my_precious'
 
-    def __init__(self, host='0.0.0.0', port=5000, debug=False):
+    def __init__(self, host='0.0.0.0', port=1202, debug=False):
         self.host = host
         self.port = port
         self.debug = debug
@@ -58,4 +58,17 @@ class Web():
             data = json.loads(response.text)
             for key in data:
                 self.logger.info('Provided shopping cart {cartId}'.format(cartId=data['cartId'])) 
+        return response
+
+    def get_pay_methods(self, cart):
+        self.logger.info(f"Web pay methods for {cart}")
+
+        response = self.pgs.get_payment_methods(cart)
+        if response.status_code == 200:
+            data = json.loads(response.text)
+            methods = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='name']
+            urls = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='formUrl']
+            fees = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='fee']
+            for id in range(len(methods)):
+                self.logger.info(f'{methods[id]} {fees[id]} {urls[id]}')
         return response

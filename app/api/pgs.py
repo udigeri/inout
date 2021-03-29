@@ -16,6 +16,12 @@ class Pgs(Restful):
     def _getShop(self):
         return getattr(self.config, "provider_TrustCommerce_shop")
 
+    def _getLocale(self):
+        return getattr(self.config, "provider_TrustCommerce_locale")
+
+    def _getCostCentre(self):
+        return getattr(self.config, "provider_TrustCommerce_costCentre")
+
     def _getHost(self):
         return getattr(self.config, "provider_TrustCommerce_host")
 
@@ -53,4 +59,24 @@ class Pgs(Restful):
             self.logger.warn(f"StatusCode:{resp.status_code} {json.dumps(json.loads(resp.text))}")
         else:
             self.logger.debug(f"StatusCode:{resp.status_code} {json.dumps(json.loads(resp.text))}")
+        return resp
+
+    def get_payment_methods(self, cart):
+        featureURL = "/paymenttypes/{tenant}/{cart}/{correlationId}/{requestor}/{locale}?costCenter={costCentre}".format(
+            tenant=self._getTenant(),
+            cart=cart,
+            correlationId="0123456789",
+            requestor=self._getShop(),
+            locale=self._getLocale(),
+            costCentre=self._getCostCentre(),
+            )
+
+        self.logger.debug(featureURL)
+        resp = self.get(self._url(featureURL), 
+                        data=None, 
+                        auth=self.auth)
+        if resp.status_code == 401:
+            self.logger.warn(f"StatusCode:{resp.status_code} {json.dumps(json.loads(resp.text))}")
+        else:
+            self.logger.debug(f"StatusCode:{resp.status_code}")
         return resp

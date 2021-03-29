@@ -7,8 +7,8 @@
 </head>
 <body>
   <div class="page">
-    <h1>InOut Parking lot</h1>
-   <div class="metanav">
+    <h1><a href="{{ url_for('index') }}">InOut Parking lot</a></h1>
+    <div class="metanav">
       {% if not session.logged_in %}
         <a href="{{ url_for('login') }}">log in</a>
       {% else %}
