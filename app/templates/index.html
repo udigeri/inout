@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>InOut</title>
-  <link rel="icon" href="../static/favicon.png" sizes="16x16"> 
+  <link rel="icon" href="../static/favicon.ico" sizes="16x16"> 
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -25,17 +25,17 @@
     {% endfor %}
 
     <p style="text-align: center; font-size: 50px;">
-      <img src="../static/parking_place.png" alt="..." width="500" height="500" usemap="#parkingmap" />
+      <img src="../static/parking_place.jpg" alt="..." width="626" height="626" usemap="#parkingmap" />
       {% if session.logged_in %}
         <map name="parkingmap">
-          <area shape="rect" coords="142,40,210,190" href="{{ url_for('ParkPlace_1') }}" alt="ZA 864KL" >
-          <area shape="rect" coords="228,40,296,190" href="{{ url_for('ParkPlace_2') }}" alt="BL 235PP" >
-          <area shape="rect" coords="318,40,386,190" href="{{ url_for('ParkPlace_3') }}" alt="BY 698LT" >
-          <area shape="rect" coords="404,40,472,190" href="{{ url_for('ParkPlace_4') }}" alt="FREE">
-          <area shape="rect" coords="142,305,210,455" href="{{ url_for('ParkPlace_5') }}" alt="MG TW777">
-          <area shape="rect" coords="228,305,296,455" href="{{ url_for('ParkPlace_6') }}" alt="3 SAM 123">
-          <area shape="rect" coords="318,305,386,455" href="{{ url_for('ParkPlace_7') }}" alt="FREE">
-          <area shape="rect" coords="404,305,472,455" href="{{ url_for('ParkPlace_8') }}" alt="KY 68 WZM">
+          <area shape="rect" coords="170,50,260,250" href="{{ url_for('ParkPlace_1') }}" alt="ZA 864KL" >
+          <area shape="rect" coords="285,50,375,250" href="{{ url_for('ParkPlace_2') }}" alt="BL 235PP" >
+          <area shape="rect" coords="395,50,485,250" href="{{ url_for('ParkPlace_3') }}" alt="BY 698LT" >
+          <area shape="rect" coords="505,50,600,250" href="{{ url_for('ParkPlace_4') }}" alt="FREE">
+          <area shape="rect" coords="170,375,260,570" href="{{ url_for('ParkPlace_5') }}" alt="MG TW777">
+          <area shape="rect" coords="285,375,375,570" href="{{ url_for('ParkPlace_6') }}" alt="3 SAM 123">
+          <area shape="rect" coords="395,375,485,570" href="{{ url_for('ParkPlace_7') }}" alt="FREE">
+          <area shape="rect" coords="505,375,600,570" href="{{ url_for('ParkPlace_8') }}" alt="KY 68 WZM">
         </map>
       {% endif %}
     </p>

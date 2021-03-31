@@ -1,9 +1,13 @@
+#!/usr/local/bin/python
+
+import os
 import argparse
-from app import App, Web
+import json
 from flask import Flask, request, session, redirect, url_for, \
                   abort, render_template, flash
-import json
-import os
+from app import App, Web
+from app.api import Transaction
+from datetime import datetime
 
 web = Web()
 flsk = web.flsk
@@ -51,25 +55,37 @@ def logout():
     flash('You were logged out', category='success')
     return redirect(url_for('index'))
 
-@flsk.route('/trx')
+@flsk.route('/trx', methods=['GET', 'POST'])
 def trx():
     if not session.get('logged_in'):
         abort(401)
-    return render_template('trx.html')
+    trx = web.trxs[-1]
+    trx.shoppingCartUuid = request.args.get('shoppingCartUuid', default = "", type = str)
+    trx.mediaType = request.args.get('mediaType', default = "", type = str)
+    trx.correlationId = request.args.get('correlationId', default = "", type = str)
+    trx.trxId = request.args.get('payId', default = "", type = str)
+    trx.maskedMediaId = request.args.get('maskedMediaId', default = "", type = str)
+    trx.status = request.args.get('status', default = "", type = str)
 
-@flsk.route('/approved')
+    trx.author_time = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+    status = request.args.get('status', default = "", type = str)
+    return render_template('trx.html', trx=trx)
+
+@flsk.route('/approved', methods=['GET', 'POST'])
 def approved():
     if not session.get('logged_in'):
         abort(401)
-    flash('Approved', category='success')
-    return redirect(url_for('trx'))
+    status = request.args.get('status', default = "", type = str)
+    flash(f'Approved {status}', category='success')
+    return redirect(url_for('trx', **request.args))
 
-@flsk.route('/declined')
+@flsk.route('/declined', methods=['GET', 'POST'])
 def declined():
     if not session.get('logged_in'):
         abort(401)
-    flash('Declined', category='error')
-    return redirect(url_for('trx'))
+    status = request.args.get('status', default = "", type = str)
+    flash(f'Declined {status}', category='success')
+    return redirect(url_for('trx', **request.args))
 
 
 
@@ -84,61 +100,54 @@ def cart():
 def pay():
     if not session.get('logged_in'):
         abort(401)
-    shopping_cart = None
-    resp = web.get_cart(request.form['pp'], request.form['lpn'], request.form['amount'])
-    data = json.loads(resp.text)
-    for key in data:
-        if key == 'cartId':
-            shopping_cart = data['cartId']
-        elif key == 'code':
-            code = data['code']
-        elif key == 'status':
-            status = data['status']
+
+    trx = web.get_cart(request.form['pp'], request.form['lpn'], request.form['amount'])
+    data = json.loads(trx.rsp_text)
  
-    if resp.status_code == 200:
-        for key in data:
-            if key == 'cartId':
-                shopping_cart = data['cartId']
-                flash(f'Shopping cart: {shopping_cart}', category='success')
-        resp = web.get_pay_methods(shopping_cart)
-        data = json.loads(resp.text)
+    if trx.rsp_status_code == 200:
+        if trx.shoppingCartUuid:
+            flash(f'Shopping cart: {trx.shoppingCartUuid}', category='success')
+
+        trx = web.get_pay_methods(trx)
+        data = json.loads(trx.rsp_text)
         method = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='name']
         urls = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='formUrl']
     else:
         method=[]
         urls=[]
-        flash(f'Generate shopping cart failed - {status} {code}', category='error')
+        flash(f'Generate shopping cart failed - {trx.rsp_status} {trx.rsp_code}', category='error')
 
-    return render_template('cart.html', shopping_cart=shopping_cart, len=len(method), method=method, urls=urls)
+    return render_template('cart.html', shopping_cart=trx.shoppingCartUuid, len=len(method), method=method, urls=urls)
 
 
 @flsk.route('/ParkPlace_1')
 def ParkPlace_1():
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"ParkPlace_1", "lpn":"ZA 864KL", "amount":"250", "display_amount":"2,50"}
+    customer = {"id":"Parking Place 1", "lpn":"ZA 864KL", "amount":"250", "display_amount":"2,50"}
     return render_template('pay.html', customer=customer)
 
 @flsk.route('/ParkPlace_2')
 def ParkPlace_2():
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"ParkPlace_2", "lpn":"BL 235PP", "amount":"1400", "display_amount":"14,00"}
+    customer = {"id":"Parking Place 2", "lpn":"BL 235PP", "amount":"1400", "display_amount":"14,00"}
     return render_template('pay.html', customer=customer)
 
 @flsk.route('/ParkPlace_3')
 def ParkPlace_3():
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"ParkPlace_3", "lpn":"BY 698LT", "amount":"0", "display_amount":"0,00"}
-    flash('BY 698LT - You can leave in 10 minutes')
-    return redirect(url_for('index'))
+    customer = {"id":"Parking Place 3", "lpn":"BY 698LT", "amount":"0", "display_amount":"0,00"}
+    flash('You can leave in 10 minutes')
+    return render_template('pay.html', customer=customer)
+    # return redirect(url_for('index'))
 
 @flsk.route('/ParkPlace_4')
 def ParkPlace_4():
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"ParkPlace_4", "lpn":"FREE", "amount":"50", "display_amount":"0,80"}
+    customer = {"id":"Parking Place 4", "lpn":"FREE", "amount":"50", "display_amount":"0,80"}
     flash('You can Reserve parking place for next 2 hour')
     return render_template('pay.html', customer=customer)
 
@@ -146,21 +155,21 @@ def ParkPlace_4():
 def ParkPlace_5():
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"ParkPlace_5", "lpn":"MG TW777", "amount":"840", "display_amount":"8,40"}
+    customer = {"id":"Parking Place 5", "lpn":"MG TW777", "amount":"840", "display_amount":"8,40"}
     return render_template('pay.html', customer=customer)
 
 @flsk.route('/ParkPlace_6')
 def ParkPlace_6():
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"ParkPlace_6", "lpn":"3 SAM 123", "amount":"4200", "display_amount":"42,00"}
+    customer = {"id":"Parking Place 6", "lpn":"3 SAM 123", "amount":"4200", "display_amount":"42,00"}
     return render_template('pay.html', customer=customer)
 
 @flsk.route('/ParkPlace_7')
 def ParkPlace_7():
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"ParkPlace_7", "lpn":"FREE", "amount":"50", "display_amount":"0,50"}
+    customer = {"id":"Parking Place 7", "lpn":"FREE", "amount":"50", "display_amount":"0,50"}
     flash('You can Reserve parking place for next 1 hour')
     return render_template('pay.html', customer=customer)
 
@@ -168,13 +177,13 @@ def ParkPlace_7():
 def ParkPlace_8():
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"ParkPlace_8", "lpn":"KY 68 WZM", "amount":"11680", "display_amount":"116,80"}
+    customer = {"id":"Parking Place 8", "lpn":"KY 68 WZM", "amount":"11680", "display_amount":"116,80"}
     return render_template('pay.html', customer=customer)
 
 
 
 if __name__ == "__main__":
-    __version_info__ = ('0','1','0')
+    __version_info__ = ('0','3','0')
     __version__ = '.'.join(__version_info__)
 
     parser = argparse.ArgumentParser(prog="InOut",

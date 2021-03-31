@@ -9,7 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ToDo
 
-## [0.2.0](https://github.com/udigeri/inout/tree/v0.2.0) (2021-03-30)
+## [0.3.0](https://github.com/udigeri/inout/compare/v0.2.0..v0.3.0) (2021-04-01)
+
+### Added
+
+- processing Receipt
+- improvements about payment
+- changed layout
+- updated Dockerfile
+
+## [0.2.0](https://github.com/udigeri/inout/compare/v0.1.0..v0.2.0) (2021-03-30)
 
 ### Added
 

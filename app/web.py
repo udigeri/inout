@@ -5,6 +5,7 @@ from requests.auth import HTTPBasicAuth
 import json
 from flask import Flask
 from .api.pgs import Pgs
+from .api.transaction import Transaction
 
 class Web():
     SECRET_KEY = 'my_precious'
@@ -17,6 +18,7 @@ class Web():
         self.password = None
         self.flsk = Flask(__name__)
         self.flsk.config.from_object(self)
+        self.trxs = []
 
     def run(self, config, logger):
         self.config = config
@@ -52,23 +54,32 @@ class Web():
 
     def get_cart(self, pp, lpn, amount):
         self.logger.info(f"Web shopping cart for {pp} {lpn} amount {amount}")
-
-        response = self.pgs.get_shopping_cart(pp, lpn, amount)
-        if response.status_code == 200:
-            data = json.loads(response.text)
+        trx = Transaction(pp, lpn, amount)
+        trx = self.pgs.get_shopping_cart(trx)
+        data = json.loads(trx.rsp_text)
+        if trx.rsp_status_code == 200:
             for key in data:
-                self.logger.info('Provided shopping cart {cartId}'.format(cartId=data['cartId'])) 
-        return response
+                if key == 'cartId':
+                    trx.shoppingCartUuid = data[key]
+                    self.logger.info('Provided shopping cart {cartId}'.format(cartId=data[key])) 
+                    self.trxs.append(trx)
+        else:
+            for key in data:
+                if key == 'code':
+                    trx.rsp_code = data[key]
+                elif key == 'status':
+                    trx.rsp_status = data[key]
+        return trx
 
-    def get_pay_methods(self, cart):
-        self.logger.info(f"Web pay methods for {cart}")
+    def get_pay_methods(self, trx):
+        self.logger.info(f"Web pay methods for {trx.shoppingCartUuid}")
+        trx = self.pgs.get_payment_methods(trx)
 
-        response = self.pgs.get_payment_methods(cart)
-        if response.status_code == 200:
-            data = json.loads(response.text)
+        if trx.rsp_status_code == 200:
+            data = json.loads(trx.rsp_text)
             methods = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='name']
             urls = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='formUrl']
             fees = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='fee']
             for id in range(len(methods)):
                 self.logger.info(f'{methods[id]} {fees[id]} {urls[id]}')
-        return response
+        return trx

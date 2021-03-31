@@ -1,12 +1,12 @@
 development:
   log_level: debug
   log_file_path: ./inout.log 
-  web:
   port: 1202
   provider:
     TrustCommerce:
       tenant: pgs-testPayVision
       shop: shop-InOut
+      shopInfo: A. Bernolaka 72, Zilina
       host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
       baseURL: /pgs/public/api/payment
       successURL: http://localhost:1202/approved
@@ -20,8 +20,9 @@ production:
   port: 1202
   provider:
     TrustCommerce:
-      tenant: pgs-testPayVision
+      tenant: pgs-testTrustCommerce
       shop: shop-InOut
+      shopInfo: A. Bernolaka 72, Zilina
       host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
       baseURL: /pgs/public/api/payment
       successURL: http://localhost:1202/approved

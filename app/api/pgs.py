@@ -1,5 +1,6 @@
 import json
 from .rest import Restful
+from .transaction import Transaction
 
 class Pgs(Restful):
     def __init__(self, config, logger):
@@ -15,6 +16,9 @@ class Pgs(Restful):
 
     def _getShop(self):
         return getattr(self.config, "provider_TrustCommerce_shop")
+
+    def _getShopInfo(self):
+        return getattr(self.config, "provider_TrustCommerce_shopInfo")
 
     def _getLocale(self):
         return getattr(self.config, "provider_TrustCommerce_locale")
@@ -37,15 +41,17 @@ class Pgs(Restful):
     def _getTenant(self):
         return getattr(self.config, "provider_TrustCommerce_tenant")
 
-    def get_shopping_cart(self, pp, lpn, amount):
+    def get_shopping_cart(self, trx):
+        trx.shop = self._getShop()
+        trx.shopInfo = self._getShopInfo()
         featureURL = "/paymentcart/{tenant}".format(tenant=self._getTenant())
-        body = {"requestor": f"{self._getShop()}", 
+        body = {"requestor": f"{trx.shop}", 
                 # "id": "1",
-                "correlationId": "0123456789",
-                "amount": f"{amount}",
-                "currency": "EUR",
-                "reason": f"Parking fee {lpn}",
-                "reference": f"{pp}",
+                "correlationId": trx.correlationId,
+                "amount": trx.amount,
+                "currency": trx.currency,
+                "reason": trx.reason,
+                "reference": trx.reference,
                 "successCallbackUrl": f"{self._getSuccessUrl()}",
                 "failureCallbackUrl": f"{self._getFailureUrl()}",
                 "customStyle": "style=\"color:red;\""
@@ -55,18 +61,20 @@ class Pgs(Restful):
         resp = self.put(self._url(featureURL), 
                         data=json.dumps(body), 
                         auth=self.auth)
-        if resp.status_code == 401:
-            self.logger.warn(f"StatusCode:{resp.status_code} {json.dumps(json.loads(resp.text))}")
+        trx.rsp_status_code = resp.status_code
+        trx.rsp_text = resp.text
+        if trx.rsp_status_code == 401:
+            self.logger.warn(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
         else:
-            self.logger.debug(f"StatusCode:{resp.status_code} {json.dumps(json.loads(resp.text))}")
-        return resp
+            self.logger.debug(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
+        return trx
 
-    def get_payment_methods(self, cart):
+    def get_payment_methods(self, trx):
         featureURL = "/paymenttypes/{tenant}/{cart}/{correlationId}/{requestor}/{locale}?costCenter={costCentre}".format(
             tenant=self._getTenant(),
-            cart=cart,
-            correlationId="0123456789",
-            requestor=self._getShop(),
+            cart=trx.shoppingCartUuid,
+            correlationId=trx.correlationId,
+            requestor=trx.shop,
             locale=self._getLocale(),
             costCentre=self._getCostCentre(),
             )
@@ -75,8 +83,10 @@ class Pgs(Restful):
         resp = self.get(self._url(featureURL), 
                         data=None, 
                         auth=self.auth)
-        if resp.status_code == 401:
-            self.logger.warn(f"StatusCode:{resp.status_code} {json.dumps(json.loads(resp.text))}")
+        trx.rsp_status_code = resp.status_code
+        trx.rsp_text = resp.text
+        if trx.rsp_status_code == 401:
+            self.logger.warn(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
         else:
-            self.logger.debug(f"StatusCode:{resp.status_code}")
-        return resp
+            self.logger.debug(f"StatusCode:{trx.rsp_status_code}")
+        return trx
