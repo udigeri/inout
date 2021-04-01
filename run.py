@@ -66,9 +66,7 @@ def trx():
     trx.trxId = request.args.get('payId', default = "", type = str)
     trx.maskedMediaId = request.args.get('maskedMediaId', default = "", type = str)
     trx.status = request.args.get('status', default = "", type = str)
-
     trx.author_time = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
-    status = request.args.get('status', default = "", type = str)
     return render_template('trx.html', trx=trx)
 
 @flsk.route('/approved', methods=['GET', 'POST'])
@@ -84,7 +82,7 @@ def declined():
     if not session.get('logged_in'):
         abort(401)
     status = request.args.get('status', default = "", type = str)
-    flash(f'Declined {status}', category='success')
+    flash(f'Declined {status}', category='error')
     return redirect(url_for('trx', **request.args))
 
 
@@ -110,14 +108,10 @@ def pay():
 
         trx = web.get_pay_methods(trx)
         data = json.loads(trx.rsp_text)
-        method = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='name']
-        urls = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='formUrl']
     else:
-        method=[]
-        urls=[]
         flash(f'Generate shopping cart failed - {trx.rsp_status} {trx.rsp_code}', category='error')
 
-    return render_template('cart.html', shopping_cart=trx.shoppingCartUuid, len=len(method), method=method, urls=urls)
+    return render_template('cart.html', len=len(trx.trx_methods), trx=trx)
 
 
 @flsk.route('/ParkPlace_1')

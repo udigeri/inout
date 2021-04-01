@@ -27,7 +27,7 @@
     <ul class="entries">
       {% for id in range(len) %}
       <li class="entry">
-        <h2 id="{{ id }}"><a href="{{ urls[id] }}">{{ method[id] }}</a></h2>
+        <h2 id="{{ id }}"><a href="{{ trx.trx_urls[id] }}">{{ trx.trx_methods[id] }} </a>Fee: {{ trx.trx_fees[id] }} EUR</h2>
       </li>
       {% else %}
         <li><em>No payment method exist.</em></li>

@@ -27,16 +27,39 @@
     <div class="receipt">
       <div class="receipt-item-left">Receipt</div>
       <div class="receipt-item-right">{{ trx.local_time }}</div>
+
       <div class="receipt-item-left">&nbsp;</div>
       <div class="receipt-item-right">&nbsp;</div>
-      <div class="receipt-item-left">{{ trx.shop }}</div>
+
+      <div class="receipt-item-left">&nbsp;</div>
+      <div class="receipt-item-right">{{ trx.shop }}</div>
+      <div class="receipt-item-left">&nbsp;</div>
       <div class="receipt-item-right">{{ trx.shopInfo }}</div>
-      <div class="receipt-item-left">{{ trx.reference }}</div>
-      <div class="receipt-item-right">{{ trx.lpn }}</div>
-      <div class="receipt-item-left">{{ trx.reason }}</div>
+
+      <div class="receipt-item-left">&nbsp;</div>
       <div class="receipt-item-right">&nbsp;</div>
+
+      <div class="receipt-item-left">-------------------</div>
+      <div class="receipt-item-right">&nbsp;</div>
+      <div class="receipt-item-left">&nbsp;</div>
+      <div class="receipt-item-right">{{ trx.reference }}</div>
+      <div class="receipt-item-left">{{ trx.reason }}</div>
+      <div class="receipt-item-right">{{ trx.lpn }}</div>
       <div class="receipt-item-left">{{ trx.entry_time }}</div>
       <div class="receipt-item-right">{{ trx.exit_time }}</div>
+      <div class="receipt-item-left">Amount</div>
+      <div class="receipt-item-right">{{ trx.amount/100 }} {{ trx.currency}} </div>
+      <div class="receipt-item-left">Fee</div>
+      <div class="receipt-item-right">0.00 {{ trx.currency}} </div>
+      <div class="receipt-item-left">VAT {{ trx.vat_percent }}%</div>
+      <div class="receipt-item-right">{{ trx.vat_amount/100 }} {{ trx.currency}}</div>
+      <div class="receipt-item-left">-------------------</div>
+      <div class="receipt-item-right">&nbsp;</div>
+      <div class="receipt-item-left">Total</div>
+      <div class="receipt-item-right">{{ trx.amount/100 }} {{ trx.currency}}</div>
+      <div class="receipt-item-left">&nbsp;</div>
+      <div class="receipt-item-right">&nbsp;</div>
+
       <div class="receipt-item-left">ShoppingCart</div>
       <div class="receipt-item-right">{{ trx.shoppingCartUuid }}</div>
       <div class="receipt-item-left">Correlation</div>
@@ -48,13 +71,17 @@
       <div class="receipt-item-left">Issuer</div>
       <div class="receipt-item-right">{{ trx.mediaType }}</div>
       <div class="receipt-item-left">PAN</div>
-      <div class="receipt-item-right">{{ trx.maskedMediaId }}</div>
+      <div class="receipt-item-right">
+        {% if trx.maskedMediaId %} 
+          {{ trx.maskedMediaId }}
+        {% else %} 
+          -
+        {% endif %}
+      </div>
+      <div class="receipt-item-left">&nbsp;</div>
+      <div class="receipt-item-right">&nbsp;</div>
       <div class="receipt-item-left">Status</div>
       <div class="receipt-item-right">{{ trx.status }}</div>
-      <div class="receipt-item-left">Amount</div>
-      <div class="receipt-item-right">{{ trx.amount/100 }} {{ trx.currency}} </div>
-      <div class="receipt-item-left">VAT {{ trx.vat_percent }} %%</div>
-      <div class="receipt-item-right">{{ trx.vat_amount/100 }} {{ trx.currency}}</div>
     </div>
 
     {% block body %}{% endblock %}

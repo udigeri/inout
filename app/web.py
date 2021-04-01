@@ -77,9 +77,9 @@ class Web():
 
         if trx.rsp_status_code == 200:
             data = json.loads(trx.rsp_text)
-            methods = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='name']
-            urls = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='formUrl']
-            fees = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='fee']
-            for id in range(len(methods)):
-                self.logger.info(f'{methods[id]} {fees[id]} {urls[id]}')
+            trx.trx_methods = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='name']
+            trx.trx_urls = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='formUrl']
+            trx.trx_fees = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='fee']
+            for id in range(len(trx.trx_methods)):
+                self.logger.info(f'{trx.trx_methods[id]} {trx.trx_fees[id]} {trx.trx_urls[id]}')
         return trx

@@ -9,6 +9,7 @@ class Transaction():
         self.shoppingCartUuid = None
         self.status = None
         self.amount = int(amount)
+        self.fee = None
         self.currency = "EUR"
         self.local_time = timestamp.strftime("%Y%m%d%H%M%S")
         self.exit_time = timestamp - timedelta(seconds=1)
@@ -32,6 +33,10 @@ class Transaction():
         self.rsp_text = None
         self.rsp_code = None
         self.rsp_status = None
+        self.trx_method_choosen = None
+        self.trx_methods = []
+        self.trx_urls = []
+        self.trx_fees = []
         self.trx = []
 
     def getTrx(self):
@@ -59,4 +64,9 @@ class Transaction():
         self.trx.append(self.rsp_text)
         self.trx.append(self.rsp_code)
         self.trx.append(self.rsp_status)
+
+        self.trx.append(self.trx_method_choosen)
+        self.trx.append(self.trx_methods)
+        self.trx.append(self.trx_urls)
+        self.trx.append(self.trx_fees)
         return trx
