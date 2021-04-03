@@ -195,7 +195,7 @@ if __name__ == "__main__":
                                 help='Define execution environment (default: %(default)s)')
     parser.add_argument('-p', '--port', dest='web_port',
                                 action='store',
-                                default="1202",
+                                default="80",
                                 help='Define web server port (default: %(default)s)')
 
     app = App(__version__, parser.parse_args())

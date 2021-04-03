@@ -1,7 +1,7 @@
 development:
   log_level: debug
   log_file_path: ./inout.log 
-  port: 1202
+  port: 80
   provider:
     TrustCommerce:
       tenant: pgs-testPayVision
@@ -9,15 +9,15 @@ development:
       shopInfo: A. Bernolaka 72, Zilina
       host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
       baseURL: /pgs/public/api/payment
-      successURL: http://localhost:1202/approved
-      failureURL: http://localhost:1202/declined
+      successURL: http://localhost:80/approved
+      failureURL: http://localhost:80/declined
       locale: en-Gb
       costCentre: 2014615
 
 production:
   log_level: info
   log_file_path: ./inout.log
-  port: 1202
+  port: 80
   provider:
     TrustCommerce:
       tenant: pgs-testTrustCommerce
@@ -25,7 +25,7 @@ production:
       shopInfo: A. Bernolaka 72, Zilina
       host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
       baseURL: /pgs/public/api/payment
-      successURL: http://localhost:1202/approved
-      failureURL: http://localhost:1202/declined
+      successURL: http://localhost:80/approved
+      failureURL: http://localhost:80/declined
       locale: en-Gb
       costCentre: 2014615

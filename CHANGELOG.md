@@ -9,8 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Changed default port to 80 
+- Using ENTRYPOINT in Dockerfile 
 - Receipt improvements
-- 
+
 ## [0.3.0](https://github.com/udigeri/inout/compare/v0.2.0..v0.3.0) (2021-04-01)
 
 ### Added

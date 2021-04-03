@@ -10,7 +10,7 @@ from .api.transaction import Transaction
 class Web():
     SECRET_KEY = 'my_precious'
 
-    def __init__(self, host='0.0.0.0', port=1202, debug=False):
+    def __init__(self, host='0.0.0.0', port=80, debug=False):
         self.host = host
         self.port = port
         self.debug = debug

@@ -15,7 +15,7 @@ class Config():
             setattr(self, 'log_file_path', './inout.log')
 
         if not hasattr(self, 'web_port'): 
-            setattr(self, 'web_port', '1202')
+            setattr(self, 'web_port', '80')
 
     def _parse_section(self, key, value):
         if type(value) == dict:
