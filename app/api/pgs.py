@@ -70,13 +70,14 @@ class Pgs(Restful):
         return trx
 
     def get_payment_methods(self, trx):
+        trx.costCentre = self._getCostCentre()
         featureURL = "/paymenttypes/{tenant}/{cart}/{correlationId}/{requestor}/{locale}?costCenter={costCentre}".format(
             tenant=self._getTenant(),
             cart=trx.shoppingCartUuid,
             correlationId=trx.correlationId,
             requestor=trx.shop,
             locale=self._getLocale(),
-            costCentre=self._getCostCentre(),
+            costCentre=trx.costCentre,
             )
 
         self.logger.debug(featureURL)

@@ -21,6 +21,7 @@ class Transaction():
         self.mediaType = None
         self.maskedMediaId = None
         self.correlationId = "0123456789"
+        self.costCentre = None
         self.lpn = lpn
         self.reason = "Parking fee"
         self.reference = pp
@@ -52,6 +53,7 @@ class Transaction():
         self.trx.append(self.mediaType)
         self.trx.append(self.maskedMediaId)
         self.trx.append(self.correlationId)
+        self.trx.append(self.castCentre)
         self.trx.append(self.lpn)
         self.trx.append(self.reason)
         self.trx.append(self.reference)
