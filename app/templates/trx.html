@@ -47,16 +47,18 @@
       <div class="receipt-item-right">{{ trx.lpn }}</div>
       <div class="receipt-item-left">{{ trx.entry_time }}</div>
       <div class="receipt-item-right">{{ trx.exit_time }}</div>
+      <div class="receipt-item-left">&nbsp;</div>
+      <div class="receipt-item-right">&nbsp;</div>
       <div class="receipt-item-left">Amount</div>
-      <div class="receipt-item-right">{{ trx.amount/100 }} {{ trx.currency}} </div>
+      <div class="receipt-item-right">{{ trx.getFormattedAmount(trx.amount) }} {{ trx.currency}} </div>
       <div class="receipt-item-left">Fee</div>
       <div class="receipt-item-right">0.00 {{ trx.currency}} </div>
       <div class="receipt-item-left">VAT {{ trx.vat_percent }}%</div>
-      <div class="receipt-item-right">{{ trx.vat_amount/100 }} {{ trx.currency}}</div>
+      <div class="receipt-item-right">{{ trx.getFormattedAmount(trx.vat_amount) }} {{ trx.currency}}</div>
       <div class="receipt-item-left">-------------------</div>
       <div class="receipt-item-right">&nbsp;</div>
       <div class="receipt-item-left">Total</div>
-      <div class="receipt-item-right">{{ trx.amount/100 }} {{ trx.currency}}</div>
+      <div class="receipt-item-right">{{ trx.getFormattedAmount(trx.amount) }} {{ trx.currency}}</div>
       <div class="receipt-item-left">&nbsp;</div>
       <div class="receipt-item-right">&nbsp;</div>
 

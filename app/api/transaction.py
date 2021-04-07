@@ -40,6 +40,9 @@ class Transaction():
         self.trx_fees = []
         self.trx = []
 
+    def getFormattedAmount(self, amount):
+        return '{}.{:0<2}'.format(int(amount/100), int(amount%100) )
+
     def getTrx(self):
         self.trx.append(self.shoppingCartUuid)
         self.trx.append(self.status)
