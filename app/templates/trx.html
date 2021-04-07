@@ -86,6 +86,13 @@
       <div class="receipt-item-right">{{ trx.status }}</div>
     </div>
 
+    <div class="trx">
+      <form action="{{ url_for('trx_done') }}" method="post" class="action">
+        <input type="hidden" name="url" value="None" >
+        <input type="submit" value="Back">
+      </form>
+    </div>    
+
     {% block body %}{% endblock %}
 
   </div>

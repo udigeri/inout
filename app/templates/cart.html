@@ -24,15 +24,39 @@
       {% endif %}
     {% endfor %}
 
-    <ul class="entries">
-      {% for id in range(len) %}
-      <li class="entry">
-        <h2 id="{{ id }}"><a href="{{ trx.trx_urls[id] }}">{{ trx.trx_methods[id] }} </a>Fee: {{ trx.trx_fees[id] }} EUR</h2>
-      </li>
+    <div class="summary">
+      <h3>Shopping cart: <em>{{ trx.shoppingCartUuid }}</em></h3>
+    </div>
+
+    <div class="method">
+      {% if len %}
+      <h3>Payment method(s)</h3>
+      <form action="{{ url_for('pay') }}" method="post" class="action">
+        {% for id in range(len) %}
+          {% if id == 0 %}
+          <input type="radio" id={{ id }} name="method_id" value={{ id }} checked="checked" >
+          <img src="../static/{{ id }}.png" />
+          <label for="method_id">{{ trx.trx_methods[id] }}</label><br>
+          {% else %}
+          <input type="radio" id={{ id }} name="method_id" value={{ id }} >
+          <img src="../static/{{ id }}.png" />
+          <label for="method_id">{{ trx.trx_methods[id] }}</label><br>
+          {% endif %}
+        {% else %}
+          <li><em>No payment method exist.</em></li>
+        {% endfor %}
+        <input type="submit" value="Pay">
+      </form>
+      You will be redirected to choosen payment method of provider
       {% else %}
-        <li><em>No payment method exist.</em></li>
-      {% endfor %}
-    </ul>
+      <form action="{{ url_for('pay') }}" method="post" class="action">
+        <input type="hidden" id=0 name="method_id" value="None" >
+        <img src="../static/none.png" />
+        <label for="method_id">No payment method(s) exist</label><br>
+        <input type="submit" value="Back">
+      </form>
+      {% endif %}
+    </div>
 
     {% block body %}{% endblock %}
 

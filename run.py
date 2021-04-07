@@ -86,16 +86,28 @@ def declined():
     return redirect(url_for('trx', **request.args))
 
 
-
-@flsk.route('/cart', methods=['GET', 'POST'])
-def cart():
+@flsk.route('/trx_done', methods=['GET', 'POST'])
+def trx_done():
     if not session.get('logged_in'):
         abort(401)
-    flash('Payment method(s)', category='success')
-    return redirect(url_for('index'))
+    if request.form['url'] == 'None':
+        return redirect(url_for('index'))
+
 
 @flsk.route('/pay', methods=['GET', 'POST'])
 def pay():
+    if not session.get('logged_in'):
+        abort(401)
+    if request.form['method_id'] == 'None':
+        return redirect(url_for('index'))
+    else:
+        trx = web.trxs[-1]
+        trx.trx_method_choosen = int(request.form['method_id'])
+        return redirect(trx.trx_urls[trx.trx_method_choosen])
+
+
+@flsk.route('/cart', methods=['GET', 'POST'])
+def cart():
     if not session.get('logged_in'):
         abort(401)
 
@@ -103,8 +115,8 @@ def pay():
     data = json.loads(trx.rsp_text)
  
     if trx.rsp_status_code == 200:
-        if trx.shoppingCartUuid:
-            flash(f'Shopping cart: {trx.shoppingCartUuid}', category='success')
+        # if trx.shoppingCartUuid:
+        #     flash(f'Shopping cart: {trx.shoppingCartUuid}', category='success')
 
         trx = web.get_pay_methods(trx)
         data = json.loads(trx.rsp_text)

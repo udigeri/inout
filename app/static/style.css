@@ -112,7 +112,52 @@
     color: black;
   }
   
+  .method {
+    margin: 10px;
+  }
+  
+  .method img{
+    margin-left: 50px;
+  }
+  
+  .method input[type="radio"] {
+    opacity: 50;
+    margin-top: 23px;
+    position: fixed;
+    width: 0;
+    vertical-align: middle;
+  }
+  
+  .method label {
+    display: inline-block;
+    font-family: 'Segoe UI', serif;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 10px 10px 10px 30px;
+    vertical-align: top;
+  }
+  
   .method input[type=submit] {
+    width: 100%;
+    background-color: #595a56;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    padding: 8px 20px;
+    margin: 15px 0 0 0;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .method input[type=submit]:hover {
+    background-color: #cac846;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: black;
+  }
+  
+  .trx input[type=submit] {
     width: 100%;
     background-color: #595a56;
     font-size: 1.2em;
@@ -125,7 +170,7 @@
     cursor: pointer;
   }
   
-  .method input[type=submit]:hover {
+  .trx input[type=submit]:hover {
     background-color: #cac846;
     font-size: 1.2em;
     font-weight: bold;

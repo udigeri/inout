@@ -40,7 +40,7 @@
       </div>
       <div class="flex-item-right">
         <div class="lpn">
-          <form action="{{ url_for('pay') }}" method="post" class="action">
+          <form action="{{ url_for('cart') }}" method="post" class="action">
             <input name="pp" type="hidden" value="{{ customer.id|safe }}">
             <input name="lpn" type="hidden" value="{{ customer.lpn|safe }}">
             <input name="amount" type="hidden" value="{{ customer.amount|safe }}">
