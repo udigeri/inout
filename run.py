@@ -112,14 +112,16 @@ def cart():
         abort(401)
 
     trx = web.get_cart(request.form['pp'], request.form['lpn'], request.form['amount'])
-    data = json.loads(trx.rsp_text)
  
     if trx.rsp_status_code == 200:
+        data = json.loads(trx.rsp_text)
         # if trx.shoppingCartUuid:
         #     flash(f'Shopping cart: {trx.shoppingCartUuid}', category='success')
 
         trx = web.get_pay_methods(trx)
         data = json.loads(trx.rsp_text)
+    # elif trx.rsp_status_code == 500:
+    #     flash(f'Generate shopping cart failed - {trx.rsp_status_code} Internal server error', category='error')
     else:
         flash(f'Generate shopping cart failed - {trx.rsp_status} {trx.rsp_code}', category='error')
 
@@ -189,7 +191,7 @@ def ParkPlace_8():
 
 
 if __name__ == "__main__":
-    __version_info__ = ('0','5','0')
+    __version_info__ = ('0','6','0')
     __version__ = '.'.join(__version_info__)
 
     parser = argparse.ArgumentParser(prog="InOut",

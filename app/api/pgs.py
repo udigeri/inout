@@ -65,6 +65,8 @@ class Pgs(Restful):
         trx.rsp_text = resp.text
         if trx.rsp_status_code == 401:
             self.logger.warn(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
+        elif trx.rsp_status_code == 500:
+            self.logger.error(f"StatusCode:{trx.rsp_status_code} {trx.rsp_text}")
         else:
             self.logger.debug(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
         return trx
@@ -88,6 +90,8 @@ class Pgs(Restful):
         trx.rsp_text = resp.text
         if trx.rsp_status_code == 401:
             self.logger.warn(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
+        elif trx.rsp_status_code == 500:
+            self.logger.error(f"StatusCode:{trx.rsp_status_code} {trx.rsp_text}")
         else:
             self.logger.debug(f"StatusCode:{trx.rsp_status_code}")
         return trx

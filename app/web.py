@@ -56,19 +56,25 @@ class Web():
         self.logger.info(f"Web shopping cart for {pp} {lpn} amount {amount}")
         trx = Transaction(pp, lpn, amount)
         trx = self.pgs.get_shopping_cart(trx)
-        data = json.loads(trx.rsp_text)
         if trx.rsp_status_code == 200:
+            data = json.loads(trx.rsp_text)
             for key in data:
                 if key == 'cartId':
                     trx.shoppingCartUuid = data[key]
                     self.logger.info('Provided shopping cart {cartId}'.format(cartId=data[key])) 
                     self.trxs.append(trx)
         else:
-            for key in data:
-                if key == 'code':
-                    trx.rsp_code = data[key]
-                elif key == 'status':
-                    trx.rsp_status = data[key]
+            if trx.rsp_status_code == 500:
+                trx.rsp_status = str(trx.rsp_status_code)
+                trx.rsp_code = "Internal Server Error"
+                self.trxs.append(trx)
+            else:
+                data = json.loads(trx.rsp_text)
+                for key in data:
+                    if key == 'code':
+                        trx.rsp_code = data[key]
+                    elif key == 'status':
+                        trx.rsp_status = data[key]
         return trx
 
     def get_pay_methods(self, trx):

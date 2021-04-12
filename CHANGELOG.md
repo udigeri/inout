@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## [0.6.0](https://github.com/udigeri/inout/compare/v0.5.0..v0.6.0) (2021-04-12)
+
+### Added
+
+- improvement for status code 500 Internal Server Error
+
 ## [0.5.0](https://github.com/udigeri/inout/compare/v0.4.0..v0.5.0) (2021-04-07)
 
 ### Added
