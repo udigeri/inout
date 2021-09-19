@@ -26,6 +26,9 @@ class Pgs(Restful):
     def _getCostCentre(self):
         return getattr(self.config, "provider_TrustCommerce_costCentre")
 
+    def _getImageColor(self):
+        return getattr(self.config, "provider_TrustCommerce_imageColor")
+
     def _getHost(self):
         return getattr(self.config, "provider_TrustCommerce_host")
 
@@ -73,13 +76,15 @@ class Pgs(Restful):
 
     def get_payment_methods(self, trx):
         trx.costCentre = self._getCostCentre()
-        featureURL = "/paymenttypes/{tenant}/{cart}/{correlationId}/{requestor}/{locale}?costCenter={costCentre}".format(
+        trx.imageColor = self._getImageColor()
+        featureURL = "/paymenttypes/{tenant}/{cart}/{correlationId}/{requestor}/{locale}?costCenter={costCentre}&imageColor={imageColor}".format(
             tenant=self._getTenant(),
             cart=trx.shoppingCartUuid,
             correlationId=trx.correlationId,
             requestor=trx.shop,
             locale=self._getLocale(),
             costCentre=trx.costCentre,
+            imageColor=trx.imageColor,
             )
 
         self.logger.debug(featureURL)

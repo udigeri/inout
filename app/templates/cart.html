@@ -35,11 +35,11 @@
         {% for id in range(len) %}
           {% if id == 0 %}
           <input type="radio" id={{ id }} name="method_id" value={{ id }} checked="checked" >
-          <img src="../static/{{ id }}.png" />
+          <img src={{trx.trx_imageUrls[id]}} height="58"/>
           <label for="method_id">{{ trx.trx_methods[id] }}</label><br>
           {% else %}
           <input type="radio" id={{ id }} name="method_id" value={{ id }} >
-          <img src="../static/{{ id }}.png" />
+          <img src={{trx.trx_imageUrls[id]}}  height="58"/>
           <label for="method_id">{{ trx.trx_methods[id] }}</label><br>
           {% endif %}
         {% else %}

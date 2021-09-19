@@ -22,6 +22,7 @@ class Transaction():
         self.maskedMediaId = None
         self.correlationId = "0123456789"
         self.costCentre = None
+        self.imageColor = "false"
         self.lpn = lpn
         self.reason = "Parking fee"
         self.reference = pp
@@ -38,6 +39,7 @@ class Transaction():
         self.trx_methods = []
         self.trx_urls = []
         self.trx_fees = []
+        self.trx_imageUrls = []
         self.trx = []
 
     def getFormattedAmount(self, amount):
@@ -56,7 +58,8 @@ class Transaction():
         self.trx.append(self.mediaType)
         self.trx.append(self.maskedMediaId)
         self.trx.append(self.correlationId)
-        self.trx.append(self.castCentre)
+        self.trx.append(self.costCentre)
+        self.trx.append(self.imageColor)
         self.trx.append(self.lpn)
         self.trx.append(self.reason)
         self.trx.append(self.reference)
@@ -74,4 +77,5 @@ class Transaction():
         self.trx.append(self.trx_methods)
         self.trx.append(self.trx_urls)
         self.trx.append(self.trx_fees)
-        return trx
+        self.trx.append(self.trx_imageUrls)
+        return self.trx

@@ -7,12 +7,14 @@ development:
       tenant: pgs-testPayVision
       shop: shop-InOut
       shopInfo: A. Bernolaka 72, Zilina
-      host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
+      host: http://localhost:8080
+      # host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
       baseURL: /pgs/public/api/payment
-      successURL: http://localhost:80/approved
-      failureURL: http://localhost:80/declined
+      successURL: http://localhost/approved
+      failureURL: http://localhost/declined
       locale: en-Gb
       costCentre: 2014615
+      imageColor: true
 
 production:
   log_level: info
@@ -20,12 +22,13 @@ production:
   port: 80
   provider:
     TrustCommerce:
-      tenant: pgs-testTrustCommerce
+      tenant: pgs-testTelecash
       shop: shop-InOut
       shopInfo: A. Bernolaka 72, Zilina
       host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
       baseURL: /pgs/public/api/payment
-      successURL: http://localhost:80/approved
-      failureURL: http://localhost:80/declined
+      successURL: http://localhost/approved
+      failureURL: http://localhost/declined
       locale: en-Gb
       costCentre: 2014615
+      imageColor: false

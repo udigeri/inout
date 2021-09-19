@@ -191,7 +191,7 @@ def ParkPlace_8():
 
 
 if __name__ == "__main__":
-    __version_info__ = ('0','6','0')
+    __version_info__ = ('0','7','0')
     __version__ = '.'.join(__version_info__)
 
     parser = argparse.ArgumentParser(prog="InOut",

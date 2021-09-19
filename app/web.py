@@ -45,7 +45,7 @@ class Web():
         except Exception as err:
             error = "Authentication failed {}".format(err)
             self.logger.error(error)
-        if rsp.status_code != 404:
+        if rsp.status_code != 404 & rsp.status_code != 200:
             error = "Authentication failed Status code {} {}".format(rsp.status_code, self._getAuthenticationURL())
             self.logger.warning(error)
         else:
@@ -83,9 +83,20 @@ class Web():
 
         if trx.rsp_status_code == 200:
             data = json.loads(trx.rsp_text)
+
+            # mandatory fields
             trx.trx_methods = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='name']
             trx.trx_urls = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='formUrl']
             trx.trx_fees = [y[z] for x in data for y in data[x] for z in y if x=='offeredPaymentTypes' if z=='fee']
+            # optional fields
+            for i in range(len(trx.trx_methods)) :
+                method = data['offeredPaymentTypes'][i]
+                if (method['name'] == trx.trx_methods[i]):
+                    if 'imageUrl' in method:
+                        trx.trx_imageUrls.append(method['imageUrl'])
+                    else:
+                        trx.trx_imageUrls.append("../static/none.png")
+
             for id in range(len(trx.trx_methods)):
-                self.logger.info(f'{trx.trx_methods[id]} {trx.trx_fees[id]} {trx.trx_urls[id]}')
+                self.logger.info(f'{trx.trx_methods[id]} {trx.trx_fees[id]} {trx.trx_urls[id]} {trx.trx_imageUrls[id]}')
         return trx
