@@ -10,28 +10,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
--
 
-## [0.7.0](https://github.com/udigeri/inout/compare/v0.6.0..v0.7.0) (2021-04-12)
+## [0.8.0](https://github.com/udigeri/inout/compare/v0.7.0..v0.8.0) (2021-10-08)
 
 ### Added
 
-- icons for payment types are loaded from PGS imageUrl
-- support for selection colored or B/W icons
+- description to methods
+- other minor chnages
+
+## [0.7.0](https://github.com/udigeri/inout/compare/v0.6.0..v0.7.0) (2021-09-19)
+
+### Added
+
+- Support for selection Colored or Grayscale icons/logo images
+- Loading icons/logo for payment types from PGS imageUrl response parameter
 
 ## [0.6.0](https://github.com/udigeri/inout/compare/v0.5.0..v0.6.0) (2021-04-12)
 
 ### Added
 
-- improvement for status code 500 Internal Server Error
+- Improvement for status code 500 Internal Server Error
 
 ## [0.5.0](https://github.com/udigeri/inout/compare/v0.4.0..v0.5.0) (2021-04-07)
 
 ### Added
 
 - Shopping cart changes
-- icons for payment types
-- small receipt changes
+- Icons for payment types
+- Small receipt changes
 
 ## [0.4.0](https://github.com/udigeri/inout/compare/v0.3.0..v0.4.0) (2021-04-06)
 

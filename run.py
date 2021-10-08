@@ -19,6 +19,7 @@ def close(error):
 
 @flsk.route('/')
 def index():
+    """Default loaded webserver page index.html"""
     env = os.environ.get('HOSTNAME')
     #flash(f'Hostname {env}', category='success')
 
@@ -30,6 +31,7 @@ def index():
 
 @flsk.route('/login', methods=['GET', 'POST'])
 def login():
+    """Create session when correct user/password provided"""
     error = None
     if request.method == 'POST':
         username = request.form['username']
@@ -49,6 +51,7 @@ def login():
 
 @flsk.route('/logout')
 def logout():
+    """Close session for logged user"""
     if not session.get('logged_in'):
         abort(401)
     session.pop('logged_in', None)
@@ -57,6 +60,7 @@ def logout():
 
 @flsk.route('/trx', methods=['GET', 'POST'])
 def trx():
+    """Response from PGS about current transaction APPROVED/DECLINED and showing Receipt of transaction"""
     if not session.get('logged_in'):
         abort(401)
     trx = web.trxs[-1]
@@ -71,6 +75,7 @@ def trx():
 
 @flsk.route('/approved', methods=['GET', 'POST'])
 def approved():
+    """Response from PGS about current APPROVED transaction - successURL"""
     if not session.get('logged_in'):
         abort(401)
     status = request.args.get('status', default = "", type = str)
@@ -79,6 +84,7 @@ def approved():
 
 @flsk.route('/declined', methods=['GET', 'POST'])
 def declined():
+    """Response from PGS about current DECLINED transaction - failureURL"""
     if not session.get('logged_in'):
         abort(401)
     status = request.args.get('status', default = "", type = str)
@@ -88,6 +94,7 @@ def declined():
 
 @flsk.route('/trx_done', methods=['GET', 'POST'])
 def trx_done():
+    """Pressed 'Done' button after showing Receipt of transaction"""
     if not session.get('logged_in'):
         abort(401)
     if request.form['url'] == 'None':
@@ -96,6 +103,7 @@ def trx_done():
 
 @flsk.route('/pay', methods=['GET', 'POST'])
 def pay():
+    """Pay shopping cart with choosen payment method and redirect to PSP page"""
     if not session.get('logged_in'):
         abort(401)
     if request.form['method_id'] == 'None':
@@ -108,10 +116,11 @@ def pay():
 
 @flsk.route('/cart', methods=['GET', 'POST'])
 def cart():
+    """Show shopping cart and possible payment methods"""
     if not session.get('logged_in'):
         abort(401)
 
-    trx = web.get_cart(request.form['pp'], request.form['lpn'], request.form['amount'])
+    trx = web.get_shoppingCart(request.form['pp'], request.form['lpn'], request.form['amount'])
  
     if trx.rsp_status_code == 200:
         data = json.loads(trx.rsp_text)
@@ -128,64 +137,74 @@ def cart():
     return render_template('cart.html', len=len(trx.trx_methods), trx=trx)
 
 
+# Car selection
+
 @flsk.route('/ParkPlace_1')
 def ParkPlace_1():
+    """Customer choose car on Parking place 1"""
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"Parking Place 1", "lpn":"ZA 864KL", "amount":"250", "display_amount":"2,50"}
+    customer = {"id":"1", "lpn":"ZA 864KL", "amount":"250", "display_amount":"2,50"}
     return render_template('pay.html', customer=customer)
 
 @flsk.route('/ParkPlace_2')
 def ParkPlace_2():
+    """Customer choose car on Parking place 2"""
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"Parking Place 2", "lpn":"BL 235PP", "amount":"1400", "display_amount":"14,00"}
+    customer = {"id":"2", "lpn":"BL 235PP", "amount":"1400", "display_amount":"14,00"}
     return render_template('pay.html', customer=customer)
 
 @flsk.route('/ParkPlace_3')
 def ParkPlace_3():
+    """Customer choose car on Parking place 3"""
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"Parking Place 3", "lpn":"BY 698LT", "amount":"0", "display_amount":"0,00"}
+    customer = {"id":"3", "lpn":"BY 698LT", "amount":"0", "display_amount":"0,00"}
     flash('You can leave in 10 minutes')
     return render_template('pay.html', customer=customer)
     # return redirect(url_for('index'))
 
 @flsk.route('/ParkPlace_4')
 def ParkPlace_4():
+    """Customer choose car on Parking place 4"""
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"Parking Place 4", "lpn":"FREE", "amount":"50", "display_amount":"0,80"}
+    customer = {"id":"4", "lpn":"FREE", "amount":"50", "display_amount":"0,80"}
     flash('You can Reserve parking place for next 2 hour')
     return render_template('pay.html', customer=customer)
 
 @flsk.route('/ParkPlace_5')
 def ParkPlace_5():
+    """Customer choose car on Parking place 5"""
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"Parking Place 5", "lpn":"MG TW777", "amount":"840", "display_amount":"8,40"}
+    customer = {"id":"5", "lpn":"MG TW777", "amount":"840", "display_amount":"8,40"}
     return render_template('pay.html', customer=customer)
 
 @flsk.route('/ParkPlace_6')
 def ParkPlace_6():
+    """Customer choose car on Parking place 6"""
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"Parking Place 6", "lpn":"3 SAM 123", "amount":"4200", "display_amount":"42,00"}
+    customer = {"id":"6", "lpn":"3 SAM 123", "amount":"4200", "display_amount":"42,00"}
     return render_template('pay.html', customer=customer)
 
 @flsk.route('/ParkPlace_7')
 def ParkPlace_7():
+    """Customer choose car on Parking place 7"""
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"Parking Place 7", "lpn":"FREE", "amount":"50", "display_amount":"0,50"}
+    customer = {"id":"7", "lpn":"FREE", "amount":"50", "display_amount":"0,50"}
     flash('You can Reserve parking place for next 1 hour')
     return render_template('pay.html', customer=customer)
 
 @flsk.route('/ParkPlace_8')
 def ParkPlace_8():
+    """Customer choose car on Parking place 8"""
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"Parking Place 8", "lpn":"KY 68 WZM", "amount":"11680", "display_amount":"116,80"}
+    customer = {"id":"8", "lpn":"KY 68 WZM", "amount":"99980", "display_amount":"999,80"}
     return render_template('pay.html', customer=customer)
 
 

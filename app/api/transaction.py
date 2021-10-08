@@ -25,7 +25,7 @@ class Transaction():
         self.imageColor = "false"
         self.lpn = lpn
         self.reason = "Parking fee"
-        self.reference = pp
+        self.reference = "Parking Place " + pp
         self.shop = None
         self.shop_info = None
         self.vat_percent = 19

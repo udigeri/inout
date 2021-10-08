@@ -8,7 +8,7 @@ from .api.pgs import Pgs
 from .api.transaction import Transaction
 
 class Web():
-    SECRET_KEY = 'my_precious'
+    SECRET_KEY = 'my_uno-tuti_secret_things'
 
     def __init__(self, host='0.0.0.0', port=80, debug=False):
         self.host = host
@@ -52,7 +52,8 @@ class Web():
             self.logger.info("Web Authentication success")
         return error
 
-    def get_cart(self, pp, lpn, amount):
+    def get_shoppingCart(self, pp, lpn, amount):
+        """This method creates a new shopping cart for a tenant"""
         self.logger.info(f"Web shopping cart for {pp} {lpn} amount {amount}")
         trx = Transaction(pp, lpn, amount)
         trx = self.pgs.get_shopping_cart(trx)
@@ -78,6 +79,7 @@ class Web():
         return trx
 
     def get_pay_methods(self, trx):
+        """This method gets available payment types for a regular payment"""
         self.logger.info(f"Web pay methods for {trx.shoppingCartUuid}")
         trx = self.pgs.get_payment_methods(trx)
 
