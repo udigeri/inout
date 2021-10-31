@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- inout flow 
 
 ### Changed
+- bugfix about configuration of web port
 
 ## [0.8.0](https://github.com/udigeri/inout/compare/v0.7.0..v0.8.0) (2021-10-08)
 

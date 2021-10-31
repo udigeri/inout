@@ -1,7 +1,7 @@
 development:
   log_level: debug
-  log_file_path: ./inout.log 
-  port: 80
+  log_file_path: /inout.log 
+  web_port: 80
   provider:
     TrustCommerce:
       tenant: pgs-testPayVision
@@ -19,7 +19,7 @@ development:
 production:
   log_level: info
   log_file_path: ./inout.log
-  port: 80
+  web_port: 80
   provider:
     TrustCommerce:
       tenant: pgs-testTelecash
