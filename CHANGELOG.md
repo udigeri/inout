@@ -8,7 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- inout flow 
+
+### Changed
+
+## [0.9.0](https://github.com/udigeri/inout/compare/v0.8.0..v0.9.0) (2021-12-01)
+
+### Added
+- inout flow gif image
+- more logs after finishing payment
 
 ### Changed
 - bugfix about configuration of web port

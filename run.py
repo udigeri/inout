@@ -71,6 +71,7 @@ def trx():
     trx.maskedMediaId = request.args.get('maskedMediaId', default = "", type = str)
     trx.status = request.args.get('status', default = "", type = str)
     trx.author_time = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+    web.logger.info(f"ShoppingCart {trx.shoppingCartUuid} Transaction {trx.trxId} {trx.mediaType} {trx.maskedMediaId} {trx.status}")
     return render_template('trx.html', trx=trx)
 
 @flsk.route('/approved', methods=['GET', 'POST'])
@@ -80,6 +81,8 @@ def approved():
         abort(401)
     status = request.args.get('status', default = "", type = str)
     flash(f'Approved {status}', category='success')
+    trx = web.trxs[-1]
+    web.logger.info(f"Transaction amount {trx.amount} {trx.currency} Method {trx.trx_methods[trx.trx_method_choosen]} APPROVED")
     return redirect(url_for('trx', **request.args))
 
 @flsk.route('/declined', methods=['GET', 'POST'])
@@ -89,6 +92,8 @@ def declined():
         abort(401)
     status = request.args.get('status', default = "", type = str)
     flash(f'Declined {status}', category='error')
+    trx = web.trxs[-1]
+    web.logger.info(f"Transaction amount {trx.amount} {trx.currency} Method {trx.trx_methods[trx.trx_method_choosen]} DECLINED")
     return redirect(url_for('trx', **request.args))
 
 
@@ -111,6 +116,7 @@ def pay():
     else:
         trx = web.trxs[-1]
         trx.trx_method_choosen = int(request.form['method_id'])
+        web.logger.info(f"Transaction amount {trx.amount} {trx.currency} Method {trx.trx_methods[trx.trx_method_choosen]} {trx.trx_urls[trx.trx_method_choosen]}")
         return redirect(trx.trx_urls[trx.trx_method_choosen])
 
 
@@ -210,7 +216,7 @@ def ParkPlace_8():
 
 
 if __name__ == "__main__":
-    __version_info__ = ('0','8','1')
+    __version_info__ = ('0','9','0')
     __version__ = '.'.join(__version_info__)
 
     parser = argparse.ArgumentParser(prog="InOut",
