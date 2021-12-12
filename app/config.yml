@@ -4,7 +4,7 @@ development:
   web_port: 80
   provider:
     TrustCommerce:
-      tenant: pgs-testPayVision
+      tenant: pgs-testWeb2Pay
       shop: shop-InOut
       shopInfo: A. Bernolaka 72, Zilina
       # host: http://localhost:8080
@@ -22,9 +22,10 @@ production:
   web_port: 80
   provider:
     TrustCommerce:
-      tenant: pgs-testWeb2Pay
+      tenant: pgs-testTelecash
       shop: shop-InOut
       shopInfo: A. Bernolaka 72, Zilina
+      # host: http://localhost:8080
       host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
       baseURL: /pgs/public/api/payment
       successURL: http://localhost/approved

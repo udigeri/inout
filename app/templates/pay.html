@@ -44,11 +44,13 @@
             <input name="pp" type="hidden" value="{{ customer.id|safe }}">
             <input name="lpn" type="hidden" value="{{ customer.lpn|safe }}">
             <input name="amount" type="hidden" value="{{ customer.amount|safe }}">
-            <input type="submit" value="Pay">
+            <input type="submit" name="button" value="Pay">
+            <input type="submit" name="button" value="Pay & Tokenize">
+            <input type="submit" name="button" value="Pay with Token">
             <!--
-            <input type="submit" value="Pay Token">
-            <input type="submit" value="Tokenization">
-            <input type="submit" value="Status">
+            <input type="submit" name="button" value="Pay Token">
+            <input type="submit" name="button" value="Tokenization">
+            <input type="submit" name="button" value="Status">
             -->
           </form>
         </div>

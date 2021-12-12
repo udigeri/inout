@@ -7,6 +7,7 @@ class Transaction():
         timestamp = datetime.now()
 
         self.shoppingCartUuid = None
+        self.pgsTokenUuid = None
         self.status = None
         self.amount = int(amount)
         self.fee = None
@@ -20,6 +21,7 @@ class Transaction():
         self.trxId = None
         self.mediaType = None
         self.maskedMediaId = None
+        self.description = None
         self.correlationId = "0123456789"
         self.costCentre = None
         self.imageColor = "false"
@@ -40,6 +42,7 @@ class Transaction():
         self.trx_urls = []
         self.trx_fees = []
         self.trx_imageUrls = []
+        self.trx_possible_tokenization = []
         self.trx = []
 
     def getFormattedAmount(self, amount):
@@ -47,6 +50,7 @@ class Transaction():
 
     def getTrx(self):
         self.trx.append(self.shoppingCartUuid)
+        self.trx.append(self.pgsTokenUuid)
         self.trx.append(self.status)
         self.trx.append(self.amount)
         self.trx.append(self.currency)
@@ -57,6 +61,7 @@ class Transaction():
         self.trx.append(self.trxId)
         self.trx.append(self.mediaType)
         self.trx.append(self.maskedMediaId)
+        self.trx.append(self.description)
         self.trx.append(self.correlationId)
         self.trx.append(self.costCentre)
         self.trx.append(self.imageColor)
@@ -78,4 +83,5 @@ class Transaction():
         self.trx.append(self.trx_urls)
         self.trx.append(self.trx_fees)
         self.trx.append(self.trx_imageUrls)
+        self.trx.append(self.trx_possible_tokenization)
         return self.trx

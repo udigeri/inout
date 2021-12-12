@@ -44,7 +44,7 @@ class Pgs(Restful):
     def _getTenant(self):
         return getattr(self.config, "provider_TrustCommerce_tenant")
 
-    def get_shopping_cart(self, trx):
+    def get_shopping_cart(self, trx, tokenReq):
         trx.shop = self._getShop()
         trx.shopInfo = self._getShopInfo()
         featureURL = "/paymentcart/{tenant}".format(tenant=self._getTenant())
@@ -57,7 +57,8 @@ class Pgs(Restful):
                 "reference": trx.reference,
                 "successCallbackUrl": f"{self._getSuccessUrl()}",
                 "failureCallbackUrl": f"{self._getFailureUrl()}",
-                "customStyle": "style=\"color:red;\""
+                "customStyle": "style=\"color:red;\"",
+                "tokenRequired": tokenReq
                 }
 
         self.logger.debug(featureURL + " " + json.dumps(body))
@@ -68,10 +69,55 @@ class Pgs(Restful):
         trx.rsp_text = resp.text
         if trx.rsp_status_code == 401:
             self.logger.warn(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
-        elif trx.rsp_status_code == 500:
-            self.logger.error(f"StatusCode:{trx.rsp_status_code} {trx.rsp_text}")
         else:
-            self.logger.debug(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
+            self.logger.error(f"StatusCode:{trx.rsp_status_code} {trx.rsp_text}")
+        return trx
+
+    def get_token_cart(self, trx):
+        trx.shop = self._getShop()
+        trx.shopInfo = self._getShopInfo()
+        featureURL = "/tokencart/{tenant}".format(tenant=self._getTenant())
+        body = {"requestor": f"{trx.shop}", 
+                # "id": "1",
+                "correlationId": trx.correlationId,
+                "amount": trx.amount,
+                "currency": trx.currency,
+                "reason": trx.reason,
+                "reference": trx.reference,
+                }
+
+        self.logger.debug(featureURL + " " + json.dumps(body))
+        resp = self.put(self._url(featureURL), 
+                        data=json.dumps(body), 
+                        auth=self.auth)
+        trx.rsp_status_code = resp.status_code
+        trx.rsp_text = resp.text
+        if trx.rsp_status_code == 401:
+            self.logger.warn(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
+        else:
+            self.logger.error(f"StatusCode:{trx.rsp_status_code} {trx.rsp_text}")
+        return trx
+
+    def pay_token_cart(self, trx, requester, correlation, cart, token, initiator):
+        featureURL = "/paymentwithtoken/{tenant}".format(tenant=self._getTenant())
+        body = {"requestor": f"{requester}", 
+                # "id": "1",
+                "correlationId": correlation,
+                "cartId": cart,
+                "pgsToken": token,
+                "transactionInitiator": initiator,
+                }
+
+        self.logger.debug(featureURL + " " + json.dumps(body))
+        resp = self.put(self._url(featureURL), 
+                        data=json.dumps(body), 
+                        auth=self.auth)
+        trx.rsp_status_code = resp.status_code
+        trx.rsp_text = resp.text
+        if trx.rsp_status_code == 401:
+            self.logger.warn(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
+        else:
+            self.logger.error(f"StatusCode:{trx.rsp_status_code} {trx.rsp_text}")
         return trx
 
     def get_payment_methods(self, trx):

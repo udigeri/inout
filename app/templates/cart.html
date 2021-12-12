@@ -25,8 +25,13 @@
     {% endfor %}
 
     <div class="summary">
-      <h3>Shopping cart: <em>{{ trx.shoppingCartUuid }}</em></h3>
+      <h3>LPN: <em>{{ trx.lpn }}</em> Amount: <em>{{ trx.getFormattedAmount(trx.amount) }} {{ trx.currency}}</em></h3>
+      <h5>Shopping cart: <em>{{ trx.shoppingCartUuid }}</em></h5>
+      {% if trx.pgsTokenUuid %}
+        <h5>Token: <em>{{ trx.pgsTokenUuid }}</em></h5>
+      {% endif %}
     </div>
+    <hr>
 
     <div class="method">
       {% if len %}
@@ -43,7 +48,7 @@
         {% else %}
           <li><em>No payment method exist.</em></li>
         {% endfor %}
-        <input type="submit" value="Pay">
+        <input type="submit" value="Continue">
       </form>
       You will be redirected to choosen payment method of provider
       {% else %}

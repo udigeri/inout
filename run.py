@@ -77,23 +77,35 @@ def trx():
 @flsk.route('/approved', methods=['GET', 'POST'])
 def approved():
     """Response from PGS about current APPROVED transaction - successURL"""
-    if not session.get('logged_in'):
-        abort(401)
+    # if not session.get('logged_in'):
+    #     abort(401)
     status = request.args.get('status', default = "", type = str)
     flash(f'Approved {status}', category='success')
     trx = web.trxs[-1]
-    web.logger.info(f"Transaction amount {trx.amount} {trx.currency} Method {trx.trx_methods[trx.trx_method_choosen]} APPROVED")
+    isTokenized = request.args.get('isTokenized', default = False, type = bool)
+    if (isTokenized):
+        web.logger.info(f"Transaction amount: {trx.amount} {trx.currency} Method: {trx.trx_methods[trx.trx_method_choosen]} APPROVED and tokenized")
+        web.tokens.append(trx.pgsTokenUuid)
+        flash(f'Tokenized {status}', category='success')
+    else:
+        web.logger.info(f"Transaction amount: {trx.amount} {trx.currency} Method: {trx.trx_methods[trx.trx_method_choosen]} APPROVED")
     return redirect(url_for('trx', **request.args))
 
 @flsk.route('/declined', methods=['GET', 'POST'])
 def declined():
     """Response from PGS about current DECLINED transaction - failureURL"""
-    if not session.get('logged_in'):
-        abort(401)
+    # if not session.get('logged_in'):
+    #     abort(401)
     status = request.args.get('status', default = "", type = str)
     flash(f'Declined {status}', category='error')
     trx = web.trxs[-1]
-    web.logger.info(f"Transaction amount {trx.amount} {trx.currency} Method {trx.trx_methods[trx.trx_method_choosen]} DECLINED")
+    isTokenized = request.args.get('isTokenized', default = False, type = bool)
+    if (isTokenized):
+        web.logger.info(f"Transaction amount: {trx.amount} {trx.currency} Method: {trx.trx_methods[trx.trx_method_choosen]} DECLINED and tokenized")
+        web.tokens.append(trx.pgsTokenUuid)
+        flash(f'{trx.trx_methods[trx.trx_method_choosen]} tokenized', category='success')
+    else:
+        web.logger.info(f"Transaction amount: {trx.amount} {trx.currency} Method: {trx.trx_methods[trx.trx_method_choosen]} DECLINED")
     return redirect(url_for('trx', **request.args))
 
 
@@ -122,23 +134,45 @@ def pay():
 
 @flsk.route('/cart', methods=['GET', 'POST'])
 def cart():
-    """Show shopping cart and possible payment methods"""
+    """Get/Show shopping cart and possible payment methods"""
     if not session.get('logged_in'):
         abort(401)
 
-    trx = web.get_shoppingCart(request.form['pp'], request.form['lpn'], request.form['amount'])
+    if request.form['button'] == "Pay":
+        trx = web.get_shoppingCart(request.form['pp'], request.form['lpn'], request.form['amount'], False)
+    elif request.form['button'] == "Pay & Tokenize":
+        trx = web.get_shoppingCart(request.form['pp'], request.form['lpn'], request.form['amount'], True)
+    elif request.form['button'] == "Pay with Token":
+        trx = web.get_tokenCart(request.form['pp'], request.form['lpn'], request.form['amount'])
  
     if trx.rsp_status_code == 200:
-        data = json.loads(trx.rsp_text)
+        #data = json.loads(trx.rsp_text)
         # if trx.shoppingCartUuid:
         #     flash(f'Shopping cart: {trx.shoppingCartUuid}', category='success')
 
-        trx = web.get_pay_methods(trx)
-        data = json.loads(trx.rsp_text)
+        if request.form['button'] == "Pay":
+            trx = web.get_pay_methods(trx)
+        elif request.form['button'] == "Pay & Tokenize":
+            trx = web.get_pay_methods(trx)
+        elif request.form['button'] == "Pay with Token":
+            if len(web.tokens):
+                trx.pgsTokenUuid = web.tokens[-1]
+                trx = web.pay_tokenCart(trx, "CUSTOMER")
+                if trx.rsp_status_code == 200:
+                    if trx.status == "SUCCESS":
+                        flash(f'Approved {trx.status}', category='success')
+                    else:
+                        flash(f'Declined {trx.status}', category='error')
+
+                    return render_template('trx.html', trx=trx)
+            else:
+                flash(f'No token available', category='error')
+
+        #data = json.loads(trx.rsp_text)
     # elif trx.rsp_status_code == 500:
     #     flash(f'Generate shopping cart failed - {trx.rsp_status_code} Internal server error', category='error')
     else:
-        flash(f'Generate shopping cart failed - {trx.rsp_status} {trx.rsp_code}', category='error')
+        flash(f'Generate cart failed - {trx.rsp_status} {trx.rsp_code}', category='error')
 
     return render_template('cart.html', len=len(trx.trx_methods), trx=trx)
 
@@ -176,7 +210,7 @@ def ParkPlace_4():
     """Customer choose car on Parking place 4"""
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"4", "lpn":"FREE", "amount":"50", "display_amount":"0,80"}
+    customer = {"id":"4", "lpn":"FREE", "amount":"100", "display_amount":"1,00"}
     flash('You can Reserve parking place for next 2 hour')
     return render_template('pay.html', customer=customer)
 
