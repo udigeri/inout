@@ -144,6 +144,8 @@ def cart():
         trx = web.get_shoppingCart(request.form['pp'], request.form['lpn'], request.form['amount'], True)
     elif request.form['button'] == "Pay with Token":
         trx = web.get_tokenCart(request.form['pp'], request.form['lpn'], request.form['amount'])
+    elif request.form['button'] == "Tokenize":
+        trx = web.get_tokenize(request.form['pp'], request.form['lpn'], request.form['amount'])
  
     if trx.rsp_status_code == 200:
         #data = json.loads(trx.rsp_text)
@@ -167,6 +169,8 @@ def cart():
                     return render_template('trx.html', trx=trx)
             else:
                 flash(f'No token available', category='error')
+        elif request.form['button'] == "Tokenize":
+            trx = web.get_token_methods(trx)
 
         #data = json.loads(trx.rsp_text)
     # elif trx.rsp_status_code == 500:
@@ -200,7 +204,7 @@ def ParkPlace_3():
     """Customer choose car on Parking place 3"""
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"3", "lpn":"BY 698LT", "amount":"0", "display_amount":"0,00"}
+    customer = {"id":"3", "lpn":"BY 698LT", "amount":"50", "display_amount":"0,50"}
     flash('You can leave in 10 minutes')
     return render_template('pay.html', customer=customer)
     # return redirect(url_for('index'))
@@ -235,7 +239,7 @@ def ParkPlace_7():
     """Customer choose car on Parking place 7"""
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"7", "lpn":"FREE", "amount":"50", "display_amount":"0,50"}
+    customer = {"id":"7", "lpn":"FREE", "amount":"0", "display_amount":"0,00"}
     flash('You can Reserve parking place for next 1 hour')
     return render_template('pay.html', customer=customer)
 

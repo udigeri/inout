@@ -47,8 +47,10 @@
             <input type="submit" name="button" value="Pay">
             <input type="submit" name="button" value="Pay & Tokenize">
             <input type="submit" name="button" value="Pay with Token">
+            {% if customer.amount == "0" %}
+              <input type="submit" name="button" value="Tokenize">
+            {% endif %}
             <!--
-            <input type="submit" name="button" value="Pay Token">
             <input type="submit" name="button" value="Tokenization">
             <input type="submit" name="button" value="Status">
             -->

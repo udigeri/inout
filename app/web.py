@@ -148,6 +148,36 @@ class Web():
                         trx.rsp_status = data[key]
         return trx
 
+    def get_tokenize(self, pp, lpn, amount):
+        """This method generate clientHandle and pgsToken for a tenant"""
+        self.logger.info(f"Web tokenization generate for {pp} {lpn} amount {amount}")
+        trx = Transaction(pp, lpn, amount)
+        trx = self.pgs.get_clientHandle(trx, False)
+        try:
+            if trx.rsp_status_code == 200:
+                data = json.loads(trx.rsp_text)
+                for key in data:
+                    if key == 'clientHandle':
+                        trx.clientHandleUuid = data[key]
+                        self.logger.info('Provided clientHandle {clientHandle}'.format(clientHandle=data[key])) 
+                    elif key == 'pgsToken':
+                        trx.pgsTokenUuid = data[key]
+                        self.logger.info('Provided token {token}'.format(token=data[key])) 
+            else:
+                if trx.rsp_status_code == 500:
+                    trx.rsp_status = str(trx.rsp_status_code)
+                    trx.rsp_code = "Internal Server Error"
+                else:
+                    data = json.loads(trx.rsp_text)
+                    for key in data:
+                        if key == 'code':
+                            trx.rsp_code = data[key]
+                        elif key == 'status':
+                            trx.rsp_status = data[key]
+        finally:
+            self.trxs.append(trx)
+        return trx
+
     def get_pay_methods(self, trx):
         """This method gets available payment types for a regular payment"""
         self.logger.info(f"Web pay methods for {trx.shoppingCartUuid}")
@@ -175,4 +205,30 @@ class Web():
 
             for id in range(len(trx.trx_methods)):
                 self.logger.info(f'{trx.trx_methods[id]} {trx.trx_fees[id]} {trx.trx_urls[id]} {trx.trx_imageUrls[id]} {trx.trx_possible_tokenization[id]}')
+        return trx
+
+    def get_token_methods(self, trx):
+        """This method gets available tokenization method types for a regular tokenization"""
+        self.logger.info(f"Web tokenization methods for {trx.clientHandleUuid}")
+        trx = self.pgs.get_tokenization_methods(trx)
+
+        if trx.rsp_status_code == 200:
+            data = json.loads(trx.rsp_text)
+
+            # mandatory fields
+            trx.trx_methods = [y[z] for x in data for y in data[x] for z in y if x=='offeredTokenizations' if z=='name']
+            trx.trx_paymentIds = [y[z] for x in data for y in data[x] for z in y if x=='offeredTokenizations' if z=='paymentId']
+            trx.trx_urls = [y[z] for x in data for y in data[x] for z in y if x=='offeredTokenizations' if z=='formUrl']
+            trx.trx_fees = [y[z] for x in data for y in data[x] for z in y if x=='offeredTokenizations' if z=='fee']
+            # optional fields
+            for i in range(len(trx.trx_methods)) :
+                method = data['offeredTokenizations'][i]
+                if (method['name'] == trx.trx_methods[i]):
+                    if 'imageUrl' in method:
+                        trx.trx_imageUrls.append(method['imageUrl'])
+                    else:
+                        trx.trx_imageUrls.append("../static/none.png")
+
+            for id in range(len(trx.trx_methods)):
+                self.logger.info(f'{trx.trx_methods[id]} {trx.trx_fees[id]} {trx.trx_urls[id]} {trx.trx_imageUrls[id]} {trx.trx_paymentIds[id]}')
         return trx

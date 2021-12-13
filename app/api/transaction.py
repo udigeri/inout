@@ -7,6 +7,7 @@ class Transaction():
         timestamp = datetime.now()
 
         self.shoppingCartUuid = None
+        self.clientHandleUuid = None
         self.pgsTokenUuid = None
         self.status = None
         self.amount = int(amount)
@@ -39,6 +40,7 @@ class Transaction():
         self.rsp_status = None
         self.trx_method_choosen = None
         self.trx_methods = []
+        self.trx_paymentIds = []
         self.trx_urls = []
         self.trx_fees = []
         self.trx_imageUrls = []
@@ -50,6 +52,7 @@ class Transaction():
 
     def getTrx(self):
         self.trx.append(self.shoppingCartUuid)
+        self.trx.append(self.clientHandleUuid)
         self.trx.append(self.pgsTokenUuid)
         self.trx.append(self.status)
         self.trx.append(self.amount)
@@ -80,6 +83,7 @@ class Transaction():
 
         self.trx.append(self.trx_method_choosen)
         self.trx.append(self.trx_methods)
+        self.trx.append(self.trx_paymentIds)
         self.trx.append(self.trx_urls)
         self.trx.append(self.trx_fees)
         self.trx.append(self.trx_imageUrls)

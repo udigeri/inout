@@ -26,7 +26,12 @@
 
     <div class="summary">
       <h3>LPN: <em>{{ trx.lpn }}</em> Amount: <em>{{ trx.getFormattedAmount(trx.amount) }} {{ trx.currency}}</em></h3>
-      <h5>Shopping cart: <em>{{ trx.shoppingCartUuid }}</em></h5>
+      {% if trx.shoppingCartUuid %}
+        <h5>Shopping cart: <em>{{ trx.shoppingCartUuid }}</em></h5>
+      {% endif %}
+      {% if trx.clientHandleUuid %}
+        <h5>ClientHandle: <em>{{ trx.clientHandleUuid }}</em></h5>
+      {% endif %}
       {% if trx.pgsTokenUuid %}
         <h5>Token: <em>{{ trx.pgsTokenUuid }}</em></h5>
       {% endif %}
