@@ -89,6 +89,9 @@ def approved():
         flash(f'Tokenized {status}', category='success')
     else:
         web.logger.info(f"Transaction amount: {trx.amount} {trx.currency} Method: {trx.trx_methods[trx.trx_method_choosen]} APPROVED")
+        if (trx.clientHandleUuid is not None):
+            web.tokens.append(trx.pgsTokenUuid)
+            flash(f'{trx.trx_methods[trx.trx_method_choosen]} tokenized', category='success')
     return redirect(url_for('trx', **request.args))
 
 @flsk.route('/declined', methods=['GET', 'POST'])
@@ -106,6 +109,9 @@ def declined():
         flash(f'{trx.trx_methods[trx.trx_method_choosen]} tokenized', category='success')
     else:
         web.logger.info(f"Transaction amount: {trx.amount} {trx.currency} Method: {trx.trx_methods[trx.trx_method_choosen]} DECLINED")
+        if (trx.clientHandleUuid is not None):
+            web.tokens.append(trx.pgsTokenUuid)
+            flash(f'{trx.trx_methods[trx.trx_method_choosen]} tokenized', category='success')
     return redirect(url_for('trx', **request.args))
 
 
