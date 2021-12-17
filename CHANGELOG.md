@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added Pay & Tokenize feature
 - added Pay with Token feature (last generated token is used for payment)
 - added Tokenize feature (just for 0,00 amount)
+- added Refund full
 ### Changed
+- some bugfix
 
 ## [0.9.0](https://github.com/udigeri/inout/compare/v0.8.0..v0.9.0) (2021-12-01)
 
