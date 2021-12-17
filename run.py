@@ -109,9 +109,15 @@ def declined():
         flash(f'{trx.trx_methods[trx.trx_method_choosen]} tokenized', category='success')
     else:
         web.logger.info(f"Transaction amount: {trx.amount} {trx.currency} Method: {trx.trx_methods[trx.trx_method_choosen]} DECLINED")
-        if (trx.clientHandleUuid is not None):
+        if trx.action == "Pay & Tokenize":
             web.tokens.append(trx.pgsTokenUuid)
-            flash(f'{trx.trx_methods[trx.trx_method_choosen]} tokenized', category='success')
+            if (trx.clientHandleUuid is not None):
+                flash(f'{trx.trx_methods[trx.trx_method_choosen]} tokenized', category='success')
+            else:
+                flash(f'{trx.trx_methods[trx.trx_method_choosen]} not tokenized', category='error')
+        elif trx.action == "Tokenize":
+            flash(f'{trx.trx_methods[trx.trx_method_choosen]} not tokenized', category='error')
+
     return redirect(url_for('trx', **request.args))
 
 
@@ -152,7 +158,26 @@ def cart():
         trx = web.get_tokenCart(request.form['pp'], request.form['lpn'], request.form['amount'])
     elif request.form['button'] == "Tokenize":
         trx = web.get_tokenize(request.form['pp'], request.form['lpn'], request.form['amount'])
- 
+    elif request.form['button'] == "Validate Token":
+        if len(web.trxs):
+            trx = web.get_tokenValidity(web.trxs[-1])
+        else:
+            flash(f'No token exist', category='error')
+            return redirect(url_for('index'))
+    elif request.form['button'] == "Delete Token":
+        if len(web.trxs):
+            trx = web.get_tokenDelete(web.trxs[-1])
+        else:
+            flash(f'No token exist', category='error')
+            return redirect(url_for('index'))
+    elif request.form['button'] == "Refund":
+        if len(web.trxs):
+            trx = web.do_refundCart(web.trxs[-1])
+        else:
+            flash(f'No shopping cart exist', category='error')
+            return redirect(url_for('index'))
+
+    trx.action = request.form['button']
     if trx.rsp_status_code == 200:
         #data = json.loads(trx.rsp_text)
         # if trx.shoppingCartUuid:
@@ -168,21 +193,47 @@ def cart():
                 trx = web.pay_tokenCart(trx, "CUSTOMER")
                 if trx.rsp_status_code == 200:
                     if trx.status == "SUCCESS":
-                        flash(f'Approved {trx.status}', category='success')
+                        flash(f'{trx.action} Approved {trx.status}', category='success')
                     else:
-                        flash(f'Declined {trx.status}', category='error')
+                        flash(f'{trx.action} Declined {trx.status}', category='error')
 
                     return render_template('trx.html', trx=trx)
             else:
-                flash(f'No token available', category='error')
+                flash(f'{trx.action} No token available', category='error')
         elif request.form['button'] == "Tokenize":
             trx = web.get_token_methods(trx)
+        elif request.form['button'] == "Validate Token":
+            if trx.tokenStatus == "IDLE" or trx.tokenStatus == "PENDING" or trx.tokenStatus == "VALID":
+                flash(f'{trx.action} {trx.pgsTokenUuid} - {trx.tokenStatus}', category='success')
+                flash(f'Card: {trx.mediaType}', category='success')
+                flash(f'PAN: {trx.maskedMediaId}', category='success')
+                flash(f'Exp: {trx.mediaExpiry}', category='success')
+            else:
+                flash(f'{trx.action} {trx.pgsTokenUuid} - {trx.tokenStatus}', category='error')
+                flash(f'Card: {trx.mediaType}', category='error')
+                flash(f'PAN: {trx.maskedMediaId}', category='error')
+                flash(f'Exp: {trx.mediaExpiry}', category='error')
+            return redirect(url_for('index'))
+        elif request.form['button'] == "Delete Token":
+            flash(f'{trx.action} {trx.pgsTokenUuid} - {trx.tokenStatus}', category='success')
+            flash(f'Msg: {trx.details}', category='success')
+            return redirect(url_for('index'))
+        elif request.form['button'] == "Refund":
+            flash(f'{trx.action} Shopping cart: {trx.shoppingCartUuid} Refund - {trx.status}', category='success')
+            flash(f'HTTP: {trx.rsp_status_code} {trx.rsp_text}', category='success')
+            return redirect(url_for('index'))
 
         #data = json.loads(trx.rsp_text)
     # elif trx.rsp_status_code == 500:
     #     flash(f'Generate shopping cart failed - {trx.rsp_status_code} Internal server error', category='error')
     else:
-        flash(f'Generate cart failed - {trx.rsp_status} {trx.rsp_code}', category='error')
+        if request.form['button'] == "Refund":
+            flash(f'{trx.action} Shopping cart: {trx.shoppingCartUuid} Refund - {trx.status}', category='error')
+            flash(f'HTTP: {trx.rsp_status_code} {trx.rsp_text}', category='error')
+            return redirect(url_for('index'))
+        else:
+            flash(f'{trx.action} Generate cart failed - {trx.rsp_status}', category='error')
+            flash(f'HTTP: {trx.rsp_status_code} {trx.rsp_text}', category='error')
 
     return render_template('cart.html', len=len(trx.trx_methods), trx=trx)
 

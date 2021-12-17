@@ -123,19 +123,83 @@ class Pgs(Restful):
             self.logger.error(f"StatusCode:{trx.rsp_status_code} {trx.rsp_text}")
         return trx
 
+    def get_tokenvalidity(self, trx):
+        trx.shop = self._getShop()
+        trx.shopInfo = self._getShopInfo()
+        featureURL = "/tokenvalidity/{tenant}".format(tenant=self._getTenant())
+        body = {"requestor": f"{trx.shop}", 
+                # "id": "1",
+                "correlationId": trx.correlationId,
+                "pgsToken": trx.pgsTokenUuid,
+                "validatePsp": "true"
+                }
+
+        self.logger.debug(featureURL + " " + json.dumps(body))
+        resp = self.put(self._url(featureURL), 
+                        data=json.dumps(body), 
+                        auth=self.auth)
+        trx.rsp_status_code = resp.status_code
+        trx.rsp_text = resp.text
+        if trx.rsp_status_code == 401:
+            self.logger.warn(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
+        else:
+            self.logger.error(f"StatusCode:{trx.rsp_status_code} {trx.rsp_text}")
+        return trx
+
+    def get_tokendelete(self, trx):
+        trx.shop = self._getShop()
+        trx.shopInfo = self._getShopInfo()
+        featureURL = "/tokendelete/{tenant}".format(tenant=self._getTenant())
+        body = {"requestor": f"{trx.shop}", 
+                # "id": "1",
+                "correlationId": trx.correlationId,
+                "pgsToken": trx.pgsTokenUuid,
+                }
+
+        self.logger.debug(featureURL + " " + json.dumps(body))
+        resp = self.delete(self._url(featureURL), 
+                        data=json.dumps(body), 
+                        auth=self.auth)
+        trx.rsp_status_code = resp.status_code
+        trx.rsp_text = resp.text
+        if trx.rsp_status_code == 401:
+            self.logger.warn(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
+        else:
+            self.logger.error(f"StatusCode:{trx.rsp_status_code} {trx.rsp_text}")
+        return trx
+
     def pay_token_cart(self, trx, requester, correlation, cart, token, initiator):
         featureURL = "/paymentwithtoken/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{requester}", 
                 # "id": "1",
                 "correlationId": correlation,
                 "cartId": cart,
-                "pgsToken": token,
-                "transactionInitiator": initiator,
+                "pgsToken": token
+                #"transactionInitiator": initiator
                 }
 
         self.logger.debug(featureURL + " " + json.dumps(body))
         resp = self.put(self._url(featureURL), 
                         data=json.dumps(body), 
+                        auth=self.auth)
+        trx.rsp_status_code = resp.status_code
+        trx.rsp_text = resp.text
+        if trx.rsp_status_code == 401:
+            self.logger.warn(f"StatusCode:{trx.rsp_status_code} {json.dumps(json.loads(trx.rsp_text))}")
+        else:
+            self.logger.error(f"StatusCode:{trx.rsp_status_code} {trx.rsp_text}")
+        return trx
+
+    def do_refund_cart(self, trx):
+        featureURL = "/refund/full/{tenant}/{cart}/{reason}".format(
+            tenant=self._getTenant(),
+            cart=trx.shoppingCartUuid,
+            reason="Unsatisfied with services"
+        )
+
+        self.logger.debug(featureURL)
+        resp = self.put(self._url(featureURL), 
+                        data=None, 
                         auth=self.auth)
         trx.rsp_status_code = resp.status_code
         trx.rsp_text = resp.text

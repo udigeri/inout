@@ -148,6 +148,29 @@ class Web():
                         trx.rsp_status = data[key]
         return trx
 
+    def do_refundCart(self, trx):
+        """This method refund token cart for a tenant"""
+        self.logger.info(f"Web refund cart {trx.shoppingCartUuid} amount {trx.amount}")
+        trx = self.pgs.do_refund_cart(trx)
+
+        if trx.rsp_status_code == 200:
+            trx.status = "SUCCESS"
+            trx.author_time = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+            self.logger.info(f"TokenCart: {trx.shoppingCartUuid} Refund: {trx.status}")
+
+        else:
+            if trx.rsp_status_code == 500:
+                trx.rsp_status = str(trx.rsp_status_code)
+                trx.rsp_code = "Internal Server Error"
+            else:
+                data = json.loads(trx.rsp_text)
+                for key in data:
+                    if key == 'code':
+                        trx.rsp_code = data[key]
+                    elif key == 'status':
+                        trx.rsp_status = data[key]
+        return trx
+
     def get_tokenize(self, pp, lpn, amount):
         """This method generate clientHandle and pgsToken for a tenant"""
         self.logger.info(f"Web tokenization generate for {pp} {lpn} amount {amount}")
@@ -176,6 +199,64 @@ class Web():
                             trx.rsp_status = data[key]
         finally:
             self.trxs.append(trx)
+        return trx
+
+    def get_tokenValidity(self, trx):
+        """This method check if pgsToken is valid for a tenant"""
+        self.logger.info(f"Web token validity")
+        trx = self.pgs.get_tokenvalidity(trx)
+        if trx.rsp_status_code == 200:
+            data = json.loads(trx.rsp_text)
+            for key in data:
+                if key == 'tokenStatus':
+                    trx.tokenStatus = data[key]
+                    self.logger.info('Provided TokenStatus {tokenStatus}'.format(tokenStatus=data[key])) 
+                elif key == 'mediaType':
+                    trx.mediaType = data[key]
+                    self.logger.info('Provided CardCircuit {cardCircuit}'.format(cardCircuit=data[key])) 
+                elif key == 'maskedMediaId':
+                    trx.maskedMediaId = data[key]
+                    self.logger.info('Provided PAN {pan}'.format(pan=data[key])) 
+                elif key == 'mediaExpiryDate':
+                    trx.mediaExpiry = data[key]
+                    self.logger.info('Provided Expiry date {exp}'.format(exp=data[key])) 
+        else:
+            if trx.rsp_status_code == 500:
+                trx.rsp_status = str(trx.rsp_status_code)
+                trx.rsp_code = "Internal Server Error"
+            else:
+                data = json.loads(trx.rsp_text)
+                for key in data:
+                    if key == 'code':
+                        trx.rsp_code = data[key]
+                    elif key == 'status':
+                        trx.rsp_status = data[key]
+        return trx
+
+    def get_tokenDelete(self, trx):
+        """This method delete pgsToken for a tenant"""
+        self.logger.info(f"Web token delete")
+        trx = self.pgs.get_tokendelete(trx)
+        if trx.rsp_status_code == 200:
+            data = json.loads(trx.rsp_text)
+            for key in data:
+                if key == 'tokenStatus':
+                    trx.tokenStatus = data[key]
+                    self.logger.info('Provided TokenStatus {tokenStatus}'.format(tokenStatus=data[key])) 
+                elif key == 'resultDetails':
+                    trx.details = data[key]
+                    self.logger.info('Provided Details {details}'.format(details=data[key])) 
+        else:
+            if trx.rsp_status_code == 500:
+                trx.rsp_status = str(trx.rsp_status_code)
+                trx.rsp_code = "Internal Server Error"
+            else:
+                data = json.loads(trx.rsp_text)
+                for key in data:
+                    if key == 'code':
+                        trx.rsp_code = data[key]
+                    elif key == 'status':
+                        trx.rsp_status = data[key]
         return trx
 
     def get_pay_methods(self, trx):
