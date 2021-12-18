@@ -7,7 +7,7 @@ class Restful():
 
     def _request(self, method, url, data, auth):
         response = None
-        if data == None:
+        if data is None:
             try:
                 response = requests.request(method, 
                                             url=url,

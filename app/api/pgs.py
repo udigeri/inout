@@ -49,7 +49,6 @@ class Pgs(Restful):
         trx.shopInfo = self._getShopInfo()
         featureURL = "/paymentcart/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
-                # "id": "1",
                 "correlationId": trx.correlationId,
                 "amount": trx.amount,
                 "currency": trx.currency,
@@ -78,7 +77,6 @@ class Pgs(Restful):
         trx.shopInfo = self._getShopInfo()
         featureURL = "/tokencart/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
-                # "id": "1",
                 "correlationId": trx.correlationId,
                 "amount": trx.amount,
                 "currency": trx.currency,
@@ -103,7 +101,6 @@ class Pgs(Restful):
         trx.shopInfo = self._getShopInfo()
         featureURL = "/tokenization/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
-                # "id": "1",
                 "correlationId": trx.correlationId,
                 "locale": self._getLocale(),
                 "successCallbackUrl": f"{self._getSuccessUrl()}",
@@ -128,7 +125,6 @@ class Pgs(Restful):
         trx.shopInfo = self._getShopInfo()
         featureURL = "/tokenvalidity/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
-                # "id": "1",
                 "correlationId": trx.correlationId,
                 "pgsToken": trx.pgsTokenUuid,
                 "validatePsp": "true"
@@ -151,7 +147,6 @@ class Pgs(Restful):
         trx.shopInfo = self._getShopInfo()
         featureURL = "/tokendelete/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
-                # "id": "1",
                 "correlationId": trx.correlationId,
                 "pgsToken": trx.pgsTokenUuid,
                 }
@@ -171,11 +166,10 @@ class Pgs(Restful):
     def pay_token_cart(self, trx, requester, correlation, cart, token, initiator):
         featureURL = "/paymentwithtoken/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{requester}", 
-                # "id": "1",
                 "correlationId": correlation,
                 "cartId": cart,
-                "pgsToken": token
-                #"transactionInitiator": initiator
+                "pgsToken": token,
+                "transactionInitiator": initiator
                 }
 
         self.logger.debug(featureURL + " " + json.dumps(body))
