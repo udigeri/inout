@@ -44,14 +44,14 @@ class Web():
         self.pgs.setAuth(HTTPBasicAuth(usr, pwd))
         try:
             rsp = requests.get(self._getAuthenticationURL(), auth=HTTPBasicAuth(usr, pwd))
+            if rsp.status_code != 404 & rsp.status_code != 200:
+                error = "Authentication failed Status code {} {}".format(rsp.status_code, self._getAuthenticationURL())
+                self.logger.warning(error)
+            else:
+                self.logger.info("Web Authentication success")
         except Exception as err:
             error = "Authentication failed {}".format(err)
             self.logger.error(error)
-        if rsp.status_code != 404 & rsp.status_code != 200:
-            error = "Authentication failed Status code {} {}".format(rsp.status_code, self._getAuthenticationURL())
-            self.logger.warning(error)
-        else:
-            self.logger.info("Web Authentication success")
         return error
 
     def get_shoppingCart(self, pp, lpn, amount, tokenize):
