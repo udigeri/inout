@@ -4,7 +4,7 @@ import os
 import argparse
 import json
 from flask import Flask, request, session, redirect, url_for, \
-                  abort, render_template, flash
+                  abort, render_template, flash, make_response, jsonify
 from app import App, Web
 from app.api import Transaction
 from datetime import datetime
@@ -28,6 +28,14 @@ def index():
     else:
         entries = [{"id":2, "title":"Container", "text":f"{env}"}]
     return render_template('index.html', entries=entries)
+
+@flsk.route('/adyen_display', methods=['GET', 'POST'])
+def adyen():
+    """Process Adyen Display messages"""
+    error = None
+    web.logger.warn(f"Display {json.dumps(request.json)}")
+    data = {'message': 'OK', 'code': 'SUCCESS'}
+    return make_response(jsonify(data), 200)
 
 @flsk.route('/login', methods=['GET', 'POST'])
 def login():
