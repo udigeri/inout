@@ -33,7 +33,7 @@ def index():
 def adyen():
     """Process Adyen Display messages"""
     error = None
-    web.logger.warn(f"Display {json.dumps(request.json)}")
+    web.logger.warn(f"{json.dumps(request.json)}")
     data = {'message': 'OK', 'code': 'SUCCESS'}
     return make_response(jsonify(data), 200)
 
@@ -236,7 +236,7 @@ def cart():
     #     flash(f'Generate shopping cart failed - {trx.rsp_status_code} Internal server error', category='error')
     else:
         if request.form['button'] == "Refund":
-            flash(f'{trx.action} Shopping cart: {trx.shoppingCartUuid} Refund - {trx.status}', category='error')
+            flash(f'{trx.action} Shopping cart: {trx.shoppingCartUuid} Refund', category='error')
             flash(f'HTTP: {trx.rsp_status_code} {trx.rsp_text}', category='error')
             return redirect(url_for('index'))
         else:
