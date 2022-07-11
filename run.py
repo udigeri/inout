@@ -108,7 +108,11 @@ def declined():
     # if not session.get('logged_in'):
     #     abort(401)
     status = request.args.get('status', default = "", type = str)
-    flash(f'Declined {status}', category='error')
+    description = request.args.get('description', default = "", type = str)
+    if (description is None):
+        description = "not known"
+
+    flash(f'Declined {status} - {description}', category='error')
     trx = web.trxs[-1]
     isTokenized = request.args.get('isTokenized', default = False, type = bool)
     if (isTokenized):
