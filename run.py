@@ -204,10 +204,14 @@ def cart():
                 trx.pgsTokenUuid = web.tokens[-1]
                 trx = web.pay_tokenCart(trx, "CUSTOMER")
                 if trx.rsp_status_code == 200:
+                    description = trx.description
+                    if (description is None):
+                        description = "not known"
+
                     if trx.status == "SUCCESS":
-                        flash(f'{trx.action} Approved {trx.status}', category='success')
+                        flash(f'{trx.action} Approved {trx.status} - {description}', category='success')
                     else:
-                        flash(f'{trx.action} Declined {trx.status}', category='error')
+                        flash(f'{trx.action} Declined {trx.status} - {description}', category='error')
 
                     return render_template('trx.html', trx=trx)
             else:
