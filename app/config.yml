@@ -25,7 +25,7 @@ production:
       tenant: pgs-testTelecash
       shop: shop-InOut
       shopInfo: A. Bernolaka 72, Zilina
-      #host: http://192.168.1.242:8080
+      # host: http://192.168.1.242:8080
       # host: http://10.180.54.62:8280
       host: https://kong.dev.parking.scheidt-bachmann.net
       # host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
