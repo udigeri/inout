@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# General
+.DS_Store
+.AppleDouble
+
 # Office extensions
 *.docx
 *.xlsx
