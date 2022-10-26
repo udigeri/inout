@@ -9,7 +9,7 @@ from .api.transaction import Transaction
 from datetime import datetime
 
 class Web():
-    SECRET_KEY = 'my_uno-tuti_secret_things'
+    SECRET_KEY = 'daco_co_je_iba_moje'
 
     def __init__(self, host='0.0.0.0', port=80, debug=False):
         self.host = host
@@ -34,7 +34,7 @@ class Web():
         # self.flsk.run(host=self.host, port=self.port, debug=self.debug, ssl_context='adhoc')
 
     def _getAuthenticationURL(self):
-        return self.pgs._getHost()
+        return self.pgs._getHost() #+ "/pgs"
 
     def getAuthentication(self, usr, pwd):
         self.username = usr
@@ -44,11 +44,11 @@ class Web():
         self.pgs.setAuth(HTTPBasicAuth(usr, pwd))
         try:
             rsp = requests.get(self._getAuthenticationURL(), auth=HTTPBasicAuth(usr, pwd))
-            if rsp.status_code != 404 & rsp.status_code != 200:
+            if rsp.status_code != 404 and rsp.status_code != 200:
                 error = "Authentication failed Status code {} {}".format(rsp.status_code, self._getAuthenticationURL())
                 self.logger.warning(error)
             else:
-                self.logger.info("Web Authentication success")
+                self.logger.info("Web Authentication success on {}".format(self._getAuthenticationURL()))
         except Exception as err:
             error = "Authentication failed {}".format(err)
             self.logger.error(error)
@@ -73,7 +73,10 @@ class Web():
                         trx.pgsTokenUuid = data[key]
                         self.logger.info('Provided token {token}'.format(token=data[key])) 
             else:
-                if trx.rsp_status_code == 500:
+                if trx.rsp_status_code == 404:
+                    trx.rsp_status = str(trx.rsp_status_code)
+                    trx.rsp_code = "Not Found"
+                elif trx.rsp_status_code == 500:
                     trx.rsp_status = str(trx.rsp_status_code)
                     trx.rsp_code = "Internal Server Error"
                 else:
