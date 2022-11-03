@@ -15,34 +15,34 @@ class Pgs(Restful):
         self.auth = auth
 
     def _getShop(self):
-        return getattr(self.config, "provider_TrustCommerce_shop")
+        return getattr(self.config, "provider_shop")
 
     def _getShopInfo(self):
-        return getattr(self.config, "provider_TrustCommerce_shopInfo")
+        return getattr(self.config, "provider_shopInfo")
 
     def _getLocale(self):
-        return getattr(self.config, "provider_TrustCommerce_locale")
+        return getattr(self.config, "provider_locale")
 
     def _getCostCentre(self):
-        return getattr(self.config, "provider_TrustCommerce_costCentre")
+        return getattr(self.config, "provider_costCentre")
 
     def _getImageColor(self):
-        return getattr(self.config, "provider_TrustCommerce_imageColor")
+        return getattr(self.config, "provider_imageColor")
 
     def _getHost(self):
-        return getattr(self.config, "provider_TrustCommerce_host")
+        return getattr(self.config, "provider_host")
 
     def _getBaseUrl(self):
-        return getattr(self.config, "provider_TrustCommerce_baseURL")
+        return getattr(self.config, "provider_baseURL")
 
     def _getSuccessUrl(self):
-        return getattr(self.config, "provider_TrustCommerce_successURL")
+        return getattr(self.config, "provider_successURL")
 
     def _getFailureUrl(self):
-        return getattr(self.config, "provider_TrustCommerce_failureURL")
+        return getattr(self.config, "provider_failureURL")
 
     def _getTenant(self):
-        return getattr(self.config, "provider_TrustCommerce_tenant")
+        return getattr(self.config, "provider_tenant")
 
     def get_shopping_cart(self, trx, tokenReq):
         trx.shop = self._getShop()
