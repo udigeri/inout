@@ -43,11 +43,13 @@
       <h3>Payment method(s)</h3>
       <form action="{{ url_for('pay') }}" method="post" class="action">
         {% for id in range(len) %}
+          <span>
           {% if id == 0 %}
           <input type="radio" id={{ id }} name="method_id" value={{ id }} checked="checked" >
           {% else %}
           <input type="radio" id={{ id }} name="method_id" value={{ id }} >
           {% endif %}
+          </span>
           <img src={{trx.trx_imageUrls[id]}}  height="58"/>
           <label for="method_id">{{ trx.trx_methods[id] }}</label><br>
         {% else %}

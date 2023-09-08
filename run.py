@@ -76,6 +76,8 @@ def trx():
     trx.mediaType = request.args.get('mediaType', default = "", type = str)
     trx.correlationId = request.args.get('correlationId', default = "", type = str)
     trx.trxId = request.args.get('payId', default = "", type = str)
+    if (trx.trxId == None or len(trx.trxId) == 0):
+        trx.trxId = request.args.get('clientHandle', default = "", type = str)
     trx.maskedMediaId = request.args.get('maskedMediaId', default = "", type = str)
     trx.status = request.args.get('status', default = "", type = str)
     trx.author_time = datetime.now().strftime("%d.%m.%Y %H:%M:%S")

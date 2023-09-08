@@ -30,10 +30,11 @@ production:
   log_file_path: ./inout.log
   web_port: 80
   provider:
-    tenant: pgs-testCCV
-    shop: shop-InOut
+    tenant: pgs-testTelecash
+    shop: shop-RepSql
     shopInfo: A. Bernolaka 72, Zilina
     # host: http://localhost:8080
+    # baseURL: /pgs/public/api/payment
 
     # IBM cloud
     # host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
@@ -41,8 +42,8 @@ production:
     # baseURL: /pgs/public/api/payment
 
     # AWS cloud
-    # host: https://kong.dev.parking.scheidt-bachmann.net/pgs/
-    host: https://pm.preprod.parking.scheidt-bachmann.net/pgs/
+    host: https://kong.dev.parking.scheidt-bachmann.net/pgs/
+    # host: https://pm.preprod.parking.scheidt-bachmann.net/pgs/
     # host: https://pm.prod.parking.scheidt-bachmann.net/pgs/
     baseURL: public/api/payment
 
