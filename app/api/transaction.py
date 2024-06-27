@@ -15,7 +15,7 @@ class Transaction():
         self.details = None
         self.amount = int(amount)
         self.fee = None
-        self.currency = "EUR"
+        self.currency = ""
         self.local_time = timestamp.strftime("%Y%m%d%H%M%S")
         self.exit_time = timestamp - timedelta(seconds=1)
         self.exit_time = self.exit_time.strftime("%d.%m.%Y %H:%M:%S")

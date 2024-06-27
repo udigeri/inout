@@ -22,6 +22,7 @@ development:
     successURL: http://localhost/approved
     failureURL: http://localhost/declined
     locale: en-GB
+    currency: EUR
     costCentre: 2014615
     imageColor: false
 
@@ -30,11 +31,11 @@ production:
   log_file_path: ./inout.log
   web_port: 80
   provider:
-    tenant: pgs-testTelecash
+    tenant: pgs-testAdvam
     shop: shop-RepSql
-    shopInfo: A. Bernolaka 72, Zilina
-    # host: http://localhost:8080
-    # baseURL: /pgs/public/api/payment
+    shopInfo: Priemyselna 14, Zilina
+    #host: http://localhost:8080
+    #baseURL: /pgs/public/api/payment
 
     # IBM cloud
     # host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
@@ -50,5 +51,6 @@ production:
     successURL: http://localhost/approved
     failureURL: http://localhost/declined
     locale: en-GB
+    currency: AUD
     costCentre: 2014615
     imageColor: true

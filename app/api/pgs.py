@@ -44,9 +44,13 @@ class Pgs(Restful):
     def _getTenant(self):
         return getattr(self.config, "provider_tenant")
 
+    def _getCurrency(self):
+        return getattr(self.config, "provider_currency")
+
     def get_shopping_cart(self, trx, tokenReq):
         trx.shop = self._getShop()
         trx.shopInfo = self._getShopInfo()
+        trx.currency = self._getCurrency()
         featureURL = "/paymentcart/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
                 "correlationId": trx.correlationId,
@@ -75,6 +79,7 @@ class Pgs(Restful):
     def get_token_cart(self, trx):
         trx.shop = self._getShop()
         trx.shopInfo = self._getShopInfo()
+        trx.currency = self._getCurrency()
         featureURL = "/tokencart/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
                 "correlationId": trx.correlationId,
