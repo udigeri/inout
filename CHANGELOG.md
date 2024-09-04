@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+## [1.2.1](https://github.com/udigeri/inout/compare/v1.2.0..v1.2.1) (2024-09-04)
+
+### Added
+
+### Changed
+- fix showing currency on initial screen
+
 ## [1.2.0](https://github.com/udigeri/inout/compare/v1.1.0..v1.2.0) (2024-06-27)
 
 ### Added

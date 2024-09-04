@@ -36,7 +36,7 @@
       <div class="flex-item-center">
         <h3>{{ customer.id|safe }}</h3>
         <h3>{{ customer.lpn|safe }}</h3>
-        <h3>{{ customer.display_amount|safe }} EUR</h3>
+        <h3>{{ customer.display_amount|safe }} {{currency|safe}}</h3>
       </div>
       <div class="flex-item-right">
         <div class="lpn">

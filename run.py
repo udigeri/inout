@@ -264,7 +264,8 @@ def ParkPlace_1():
     if not session.get('logged_in'):
         abort(401)
     customer = {"id":"1", "lpn":"ZA 864KL", "amount":"250", "display_amount":"2,50"}
-    return render_template('pay.html', customer=customer)
+    currency = getattr(app.config, "provider_currency")
+    return render_template('pay.html', customer=customer, currency=currency)
 
 @flsk.route('/ParkPlace_2')
 def ParkPlace_2():
@@ -272,7 +273,8 @@ def ParkPlace_2():
     if not session.get('logged_in'):
         abort(401)
     customer = {"id":"2", "lpn":"BL 235PP", "amount":"1400", "display_amount":"14,00"}
-    return render_template('pay.html', customer=customer)
+    currency = getattr(app.config, "provider_currency")
+    return render_template('pay.html', customer=customer, currency=currency)
 
 @flsk.route('/ParkPlace_3')
 def ParkPlace_3():
@@ -281,8 +283,8 @@ def ParkPlace_3():
         abort(401)
     customer = {"id":"3", "lpn":"BY 698LT", "amount":"50", "display_amount":"0,50"}
     flash('You can leave in 10 minutes')
-    return render_template('pay.html', customer=customer)
-    # return redirect(url_for('index'))
+    currency = getattr(app.config, "provider_currency")
+    return render_template('pay.html', customer=customer, currency=currency)
 
 @flsk.route('/ParkPlace_4')
 def ParkPlace_4():
@@ -291,7 +293,8 @@ def ParkPlace_4():
         abort(401)
     customer = {"id":"4", "lpn":"FREE", "amount":"100", "display_amount":"1,00"}
     flash('You can Reserve parking place for next 2 hour')
-    return render_template('pay.html', customer=customer)
+    currency = getattr(app.config, "provider_currency")
+    return render_template('pay.html', customer=customer, currency=currency)
 
 @flsk.route('/ParkPlace_5')
 def ParkPlace_5():
@@ -299,7 +302,8 @@ def ParkPlace_5():
     if not session.get('logged_in'):
         abort(401)
     customer = {"id":"5", "lpn":"MG TW777", "amount":"840", "display_amount":"8,40"}
-    return render_template('pay.html', customer=customer)
+    currency = getattr(app.config, "provider_currency")
+    return render_template('pay.html', customer=customer, currency=currency)
 
 @flsk.route('/ParkPlace_6')
 def ParkPlace_6():
@@ -307,7 +311,8 @@ def ParkPlace_6():
     if not session.get('logged_in'):
         abort(401)
     customer = {"id":"6", "lpn":"3 SAM 123", "amount":"4200", "display_amount":"42,00"}
-    return render_template('pay.html', customer=customer)
+    currency = getattr(app.config, "provider_currency")
+    return render_template('pay.html', customer=customer, currency=currency)
 
 @flsk.route('/ParkPlace_7')
 def ParkPlace_7():
@@ -316,7 +321,8 @@ def ParkPlace_7():
         abort(401)
     customer = {"id":"7", "lpn":"FREE", "amount":"0", "display_amount":"0,00"}
     flash('You can Reserve parking place for next 1 hour')
-    return render_template('pay.html', customer=customer)
+    currency = getattr(app.config, "provider_currency")
+    return render_template('pay.html', customer=customer, currency=currency)
 
 @flsk.route('/ParkPlace_8')
 def ParkPlace_8():
@@ -324,12 +330,13 @@ def ParkPlace_8():
     if not session.get('logged_in'):
         abort(401)
     customer = {"id":"8", "lpn":"KY 68 WZM", "amount":"99980", "display_amount":"999,80"}
-    return render_template('pay.html', customer=customer)
+    currency = getattr(app.config, "provider_currency")
+    return render_template('pay.html', customer=customer, currency=currency)
 
 
 
 if __name__ == "__main__":
-    __version_info__ = ('1','2','0')
+    __version_info__ = ('1','2','1')
     __version__ = '.'.join(__version_info__)
 
     parser = argparse.ArgumentParser(prog="InOut",
