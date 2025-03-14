@@ -37,6 +37,26 @@ def adyen():
     data = {'message': 'OK', 'code': 'SUCCESS'}
     return make_response(jsonify(data), 200)
 
+@flsk.route('/pending', methods=['GET', 'POST'])
+def notify():
+    """Process notification"""
+    error = None
+    cart = request.args.get('shoppingCartUuid', default = "", type = str)
+
+    flash(f'Pending {cart}', category='success')
+    entries = [{"id":1, "title":"shoppingCartUuid", "text":f'{cart}'}]
+    return render_template('index.html', entries=entries)
+
+@flsk.route('/notify', methods=['GET', 'POST'])
+def notify():
+    """Process notification"""
+    error = None
+    cart = request.args.get('shoppingCartUuid', default = "", type = str)
+
+    flash(f'Notification {cart}', category='success')
+    entries = [{"id":1, "title":"shoppingCartUuid", "text":f'{cart}'}]
+    return render_template('index.html', entries=entries)
+
 @flsk.route('/login', methods=['GET', 'POST'])
 def login():
     """Create session when correct user/password provided"""
