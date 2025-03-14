@@ -41,6 +41,12 @@ class Pgs(Restful):
     def _getFailureUrl(self):
         return getattr(self.config, "provider_failureURL")
 
+    def _getPendingUrl(self):
+        return getattr(self.config, "provider_pendingURL")
+
+    def _getNotifyUrl(self):
+        return getattr(self.config, "provider_notifyURL")
+
     def _getTenant(self):
         return getattr(self.config, "provider_tenant")
 
@@ -60,6 +66,8 @@ class Pgs(Restful):
                 "reference": trx.reference,
                 "successCallbackUrl": f"{self._getSuccessUrl()}",
                 "failureCallbackUrl": f"{self._getFailureUrl()}",
+                "pendingCallbackUrl": f"{self._getPendingUrl()}",
+                "notifyCallbackUrl": f"{self._getNotifyUrl()}",
                 "customStyle": "style=\"color:red;\"",
                 "tokenRequired": tokenReq
                 }
@@ -110,6 +118,8 @@ class Pgs(Restful):
                 "locale": self._getLocale(),
                 "successCallbackUrl": f"{self._getSuccessUrl()}",
                 "failureCallbackUrl": f"{self._getFailureUrl()}",
+                "pendingCallbackUrl": f"{self._getPendingUrl()}",
+                "notifyCallbackUrl": f"{self._getNotifyUrl()}",
                 "customStyle": "style=\"color:red;\""
                 }
 

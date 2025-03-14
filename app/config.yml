@@ -3,7 +3,7 @@ development:
   log_file_path: ./inout.log 
   web_port: 80
   provider:
-    tenant: pgs-testTelecash
+    tenant: pgs-testCCV
     shop: shop-InOut
     shopInfo: A. Bernolaka 72, Zilina
     # host: http://localhost:8080
@@ -21,6 +21,8 @@ development:
 
     successURL: http://localhost/approved
     failureURL: http://localhost/declined
+    pendingURL: http://localhost/pending
+    notifyURL: http://localhost/notify
     locale: en-GB
     currency: EUR
     costCentre: 2014615
@@ -50,7 +52,9 @@ production:
 
     successURL: http://localhost/approved
     failureURL: http://localhost/declined
+    pendingURL: http://localhost/pending
+    notifyURL: http://localhost/notify
     locale: en-GB
-    currency: JPY
+    currency: EUR
     costCentre: 2014615
     imageColor: true
