@@ -61,7 +61,7 @@ def notify():
     return render_template('index.html', entries=entries)
 
 @flsk.route('/notifytout', methods=['GET', 'POST'])
-def pending():
+def notifytout():
     """Process noytify timeout"""
     error = None
     cart = request.args.get('shoppingCartUuid', default = "", type = str)
