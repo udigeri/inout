@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+## [1.3.0](https://github.com/udigeri/inout/compare/v1.2.1..v1.3.0) (2025-03-18)
+
+### Added
+- pending, notify url in configuration file
+- notifytout endpoint with timeout 11s
+
+### Changed
+
 ## [1.2.1](https://github.com/udigeri/inout/compare/v1.2.0..v1.2.1) (2024-09-04)
 
 ### Added

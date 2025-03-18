@@ -8,6 +8,8 @@ from flask import Flask, request, session, redirect, url_for, \
 from app import App, Web
 from app.api import Transaction
 from datetime import datetime
+import time
+
 
 web = Web()
 flsk = web.flsk
@@ -38,13 +40,14 @@ def adyen():
     return make_response(jsonify(data), 200)
 
 @flsk.route('/pending', methods=['GET', 'POST'])
-def notify():
-    """Process notification"""
+def pending():
+    """Process pending"""
     error = None
     cart = request.args.get('shoppingCartUuid', default = "", type = str)
 
     flash(f'Pending {cart}', category='success')
     entries = [{"id":1, "title":"shoppingCartUuid", "text":f'{cart}'}]
+    time.sleep(12)
     return render_template('index.html', entries=entries)
 
 @flsk.route('/notify', methods=['GET', 'POST'])
@@ -55,6 +58,17 @@ def notify():
 
     flash(f'Notification {cart}', category='success')
     entries = [{"id":1, "title":"shoppingCartUuid", "text":f'{cart}'}]
+    return render_template('index.html', entries=entries)
+
+@flsk.route('/notifytout', methods=['GET', 'POST'])
+def pending():
+    """Process noytify timeout"""
+    error = None
+    cart = request.args.get('shoppingCartUuid', default = "", type = str)
+
+    flash(f'Notification {cart}', category='error')
+    entries = [{"id":1, "title":"shoppingCartUuid", "text":f'{cart}'}]
+    time.sleep(11)
     return render_template('index.html', entries=entries)
 
 @flsk.route('/login', methods=['GET', 'POST'])
@@ -356,7 +370,7 @@ def ParkPlace_8():
 
 
 if __name__ == "__main__":
-    __version_info__ = ('1','2','1')
+    __version_info__ = ('1','3','0')
     __version__ = '.'.join(__version_info__)
 
     parser = argparse.ArgumentParser(prog="InOut",
