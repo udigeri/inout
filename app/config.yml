@@ -23,18 +23,20 @@ development:
     successURL: http://localhost/approved
     failureURL: http://localhost/declined
     pendingURL: http://localhost/pending
-    notifyURL: http://localhost/notify
+    #notifyURL: http://localhost/notify
+    notifyURL: https://kong.dev.parking.scheidt-bachmann.net/pgs-report-gui/log
     locale: en-GB
     currency: GBP
     costCentre: 2014615
     imageColor: false
+    correlationId: RF05_NA_WA
 
 production:
   log_level: debug
   log_file_path: ./inout.log
   web_port: 80
   provider:
-    tenant: pgs-testNMI
+    tenant: pgs-testDummy
     shop: shop-RepSql
     shopInfo: Priemyselna 14, Zilina
     host: http://localhost:8080
@@ -55,7 +57,9 @@ production:
     failureURL: http://localhost/declined
     pendingURL: http://localhost/pending
     notifyURL: http://localhost/notify
+    #notifyURL: https://kong.dev.parking.scheidt-bachmann.net/pgs-report-gui/log
     locale: en-GB
-    currency: GBP
+    currency: EUR
     costCentre: 2014615
     imageColor: true
+    correlationId: RS00

@@ -45,9 +45,9 @@ def pending():
     error = None
     cart = request.args.get('shoppingCartUuid', default = "", type = str)
 
-    flash(f'Pending {cart}', category='success')
+    flash(f'PENDING {cart}\nThe transaction will be processed later in the background.\nA notification will be sent once the processing is complete.', category='pending')
     entries = [{"id":1, "title":"shoppingCartUuid", "text":f'{cart}'}]
-    time.sleep(12)
+    #time.sleep(2)
     return render_template('index.html', entries=entries)
 
 @flsk.route('/notify', methods=['GET', 'POST'])
@@ -56,8 +56,9 @@ def notify():
     error = None
     cart = request.args.get('shoppingCartUuid', default = "", type = str)
 
-    flash(f'Notification {cart}', category='success')
+    flash(f'NOTIFICATION {cart}', category='success')
     entries = [{"id":1, "title":"shoppingCartUuid", "text":f'{cart}'}]
+    #time.sleep(5)
     return render_template('index.html', entries=entries)
 
 @flsk.route('/notifytout', methods=['GET', 'POST'])
@@ -66,7 +67,7 @@ def notifytout():
     error = None
     cart = request.args.get('shoppingCartUuid', default = "", type = str)
 
-    flash(f'Notification {cart}', category='error')
+    flash(f'NOTIFICATION {cart}', category='error')
     entries = [{"id":1, "title":"shoppingCartUuid", "text":f'{cart}'}]
     time.sleep(11)
     return render_template('index.html', entries=entries)
@@ -124,7 +125,7 @@ def approved():
     # if not session.get('logged_in'):
     #     abort(401)
     status = request.args.get('status', default = "", type = str)
-    flash(f'Approved {status}', category='success')
+    flash(f'SUCCESS {status}', category='success')
     trx = web.trxs[-1]
     isTokenized = request.args.get('isTokenized', default = False, type = bool)
     if (isTokenized):
@@ -148,7 +149,7 @@ def declined():
     if (description is None):
         description = "not known"
 
-    flash(f'Declined {status} - {description}', category='error')
+    flash(f'FAILURE {status} - {description}', category='error')
     trx = web.trxs[-1]
     isTokenized = request.args.get('isTokenized', default = False, type = bool)
     if (isTokenized):
@@ -315,7 +316,7 @@ def ParkPlace_3():
     """Customer choose car on Parking place 3"""
     if not session.get('logged_in'):
         abort(401)
-    customer = {"id":"3", "lpn":"BY 698LT", "amount":"50", "display_amount":"0,50"}
+    customer = {"id":"3", "lpn":"BY 698LT", "amount":"1302", "display_amount":"13,02"}
     flash('You can leave in 10 minutes')
     currency = getattr(app.config, "provider_currency")
     return render_template('pay.html', customer=customer, currency=currency)

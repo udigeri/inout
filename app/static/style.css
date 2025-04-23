@@ -198,6 +198,11 @@
     padding: 0.5em;
   }
 
+  .pending {
+    background: #F8F0D6;
+    padding: 0.5em;
+  }
+
   .receipt {
     background: #ebeaea;
     padding: 10px;

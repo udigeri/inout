@@ -166,12 +166,16 @@ class Web():
                 trx.rsp_status = str(trx.rsp_status_code)
                 trx.rsp_code = "Internal Server Error"
             else:
-                data = json.loads(trx.rsp_text)
-                for key in data:
-                    if key == 'code':
-                        trx.rsp_code = data[key]
-                    elif key == 'status':
-                        trx.rsp_status = data[key]
+                try:
+                    data = json.loads(trx.rsp_text)
+                    for key in data:
+                        if key == 'code':
+                            trx.rsp_code = data[key]
+                        elif key == 'status':
+                            trx.rsp_status = data[key]
+                except json.decoder.JSONDecodeError:
+                    trx.rsp_code = "Invalid JSON"
+                    trx.rsp_status = "Invalid JSON"
         return trx
 
     def get_tokenize(self, pp, lpn, amount):

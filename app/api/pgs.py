@@ -53,10 +53,14 @@ class Pgs(Restful):
     def _getCurrency(self):
         return getattr(self.config, "provider_currency")
 
+    def _getCorrelationId(self):
+        return getattr(self.config, "provider_correlationId")
+
     def get_shopping_cart(self, trx, tokenReq):
         trx.shop = self._getShop()
         trx.shopInfo = self._getShopInfo()
         trx.currency = self._getCurrency()
+        trx.correlationId = self._getCorrelationId()
         featureURL = "/paymentcart/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
                 "correlationId": trx.correlationId,
@@ -88,6 +92,7 @@ class Pgs(Restful):
         trx.shop = self._getShop()
         trx.shopInfo = self._getShopInfo()
         trx.currency = self._getCurrency()
+        trx.correlationId = self._getCorrelationId()
         featureURL = "/tokencart/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
                 "correlationId": trx.correlationId,
@@ -112,10 +117,11 @@ class Pgs(Restful):
     def get_clientHandle(self, trx, tokenReq):
         trx.shop = self._getShop()
         trx.shopInfo = self._getShopInfo()
+        trx.correlationId = self._getCorrelationId()
         featureURL = "/tokenization/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
                 "correlationId": trx.correlationId,
-                "locale": self._getLocale(),
+                "locale": f"{self._getLocale()}",
                 "successCallbackUrl": f"{self._getSuccessUrl()}",
                 "failureCallbackUrl": f"{self._getFailureUrl()}",
                 "pendingCallbackUrl": f"{self._getPendingUrl()}",
@@ -138,6 +144,7 @@ class Pgs(Restful):
     def get_tokenvalidity(self, trx):
         trx.shop = self._getShop()
         trx.shopInfo = self._getShopInfo()
+        trx.correlationId = self._getCorrelationId()
         featureURL = "/tokenvalidity/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
                 "correlationId": trx.correlationId,
@@ -160,6 +167,7 @@ class Pgs(Restful):
     def get_tokendelete(self, trx):
         trx.shop = self._getShop()
         trx.shopInfo = self._getShopInfo()
+        trx.correlationId = self._getCorrelationId()
         featureURL = "/tokendelete/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
                 "correlationId": trx.correlationId,
@@ -179,9 +187,10 @@ class Pgs(Restful):
         return trx
 
     def pay_token_cart(self, trx, requester, correlation, cart, token, initiator):
+        trx.correlationId = self._getCorrelationId()
         featureURL = "/paymentwithtoken/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{requester}", 
-                "correlationId": correlation,
+                "correlationId": trx.correlationId,
                 "cartId": cart,
                 "pgsToken": token,
                 "transactionInitiator": initiator
@@ -203,7 +212,7 @@ class Pgs(Restful):
         featureURL = "/refund/full/{tenant}/{cart}/{reason}".format(
             tenant=self._getTenant(),
             cart=trx.shoppingCartUuid,
-            reason="Unsatisfied with services"
+            reason="RF00_WA"
         )
 
         self.logger.debug(featureURL)
@@ -221,6 +230,7 @@ class Pgs(Restful):
     def get_payment_methods(self, trx):
         trx.costCentre = self._getCostCentre()
         trx.imageColor = self._getImageColor()
+        trx.correlationId = self._getCorrelationId()
         featureURL = "/paymenttypes/{tenant}/{cart}/{correlationId}/{requestor}/{locale}?costCenter={costCentre}&imageColor={imageColor}".format(
             tenant=self._getTenant(),
             cart=trx.shoppingCartUuid,
@@ -248,6 +258,7 @@ class Pgs(Restful):
     def get_tokenization_methods(self, trx):
         trx.costCentre = self._getCostCentre()
         trx.imageColor = self._getImageColor()
+        trx.correlationId = self._getCorrelationId()
         featureURL = "/tokenizationtypes/{tenant}/{clientHandle}/{correlationId}/{requestor}/{locale}?costCenter={costCentre}&imageColor={imageColor}".format(
             tenant=self._getTenant(),
             clientHandle=trx.clientHandleUuid,

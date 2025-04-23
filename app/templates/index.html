@@ -19,6 +19,8 @@
     {% for category, message in get_flashed_messages(with_categories=true) %}
       {% if category == "error" %}
         <div class="error">{{ message }}</div>
+      {% elif category == "pending" %}
+        <div class="pending">{{ message }}</div>
       {% else %}
         <div class="flash">{{ message }}</div>
       {% endif %}
