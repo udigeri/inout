@@ -67,7 +67,7 @@ class Pgs(Restful):
         trx.reason = self._getReason()
         featureURL = "/paymentcart/{tenant}".format(tenant=self._getTenant())
 
-        if (self._getPendingUrl == "" & self._getNotifyUrl == ""):
+        if (self._getPendingUrl() is None and self._getNotifyUrl() is None):
             body = {"requestor": f"{trx.shop}", 
                 "correlationId": trx.correlationId,
                 "amount": trx.amount,
@@ -82,7 +82,7 @@ class Pgs(Restful):
                 "tokenRequired": tokenReq
                 }
 
-        elif (self._getPendingUrl == ""):
+        elif (self._getPendingUrl() is None):
             body = {"requestor": f"{trx.shop}", 
                 "correlationId": trx.correlationId,
                 "amount": trx.amount,
@@ -97,7 +97,7 @@ class Pgs(Restful):
                 "tokenRequired": tokenReq
                 }
 
-        elif (self._getNotifyUrl == ""):
+        elif (self._getNotifyUrl() is None):
             body = {"requestor": f"{trx.shop}", 
                 "correlationId": trx.correlationId,
                 "amount": trx.amount,
@@ -108,6 +108,21 @@ class Pgs(Restful):
                 "failureCallbackUrl": f"{self._getFailureUrl()}",
                 "pendingCallbackUrl": f"{self._getPendingUrl()}",
                 # "notifyCallbackUrl": f"{self._getNotifyUrl()}",
+                "customStyle": "style=\"color:red;\"",
+                "tokenRequired": tokenReq
+                }
+
+        else:
+            body = {"requestor": f"{trx.shop}", 
+                "correlationId": trx.correlationId,
+                "amount": trx.amount,
+                "currency": trx.currency,
+                "reason": trx.reason,
+                "reference": trx.reference,
+                "successCallbackUrl": f"{self._getSuccessUrl()}",
+                "failureCallbackUrl": f"{self._getFailureUrl()}",
+                "pendingCallbackUrl": f"{self._getPendingUrl()}",
+                "notifyCallbackUrl": f"{self._getNotifyUrl()}",
                 "customStyle": "style=\"color:red;\"",
                 "tokenRequired": tokenReq
                 }
@@ -157,15 +172,50 @@ class Pgs(Restful):
         trx.shopInfo = self._getShopInfo()
         trx.correlationId = self._getCorrelationId()
         featureURL = "/tokenization/{tenant}".format(tenant=self._getTenant())
-        body = {"requestor": f"{trx.shop}", 
-                "correlationId": trx.correlationId,
-                "locale": f"{self._getLocale()}",
-                "successCallbackUrl": f"{self._getSuccessUrl()}",
-                "failureCallbackUrl": f"{self._getFailureUrl()}",
-                "pendingCallbackUrl": f"{self._getPendingUrl()}",
-                "notifyCallbackUrl": f"{self._getNotifyUrl()}",
-                "customStyle": "style=\"color:red;\""
-                }
+
+        if (self._getPendingUrl() is None and self._getNotifyUrl() is None):
+            body = {"requestor": f"{trx.shop}", 
+                    "correlationId": trx.correlationId,
+                    "locale": f"{self._getLocale()}",
+                    "successCallbackUrl": f"{self._getSuccessUrl()}",
+                    "failureCallbackUrl": f"{self._getFailureUrl()}",
+                    # "pendingCallbackUrl": f"{self._getPendingUrl()}",
+                    # "notifyCallbackUrl": f"{self._getNotifyUrl()}",
+                    "customStyle": "style=\"color:red;\""
+                    }
+
+        elif (self._getPendingUrl() is None):
+            body = {"requestor": f"{trx.shop}", 
+                    "correlationId": trx.correlationId,
+                    "locale": f"{self._getLocale()}",
+                    "successCallbackUrl": f"{self._getSuccessUrl()}",
+                    "failureCallbackUrl": f"{self._getFailureUrl()}",
+                    # "pendingCallbackUrl": f"{self._getPendingUrl()}",
+                    "notifyCallbackUrl": f"{self._getNotifyUrl()}",
+                    "customStyle": "style=\"color:red;\""
+                    }
+
+        elif (self._getNotifyUrl() is None):
+            body = {"requestor": f"{trx.shop}", 
+                    "correlationId": trx.correlationId,
+                    "locale": f"{self._getLocale()}",
+                    "successCallbackUrl": f"{self._getSuccessUrl()}",
+                    "failureCallbackUrl": f"{self._getFailureUrl()}",
+                    "pendingCallbackUrl": f"{self._getPendingUrl()}",
+                    # "notifyCallbackUrl": f"{self._getNotifyUrl()}",
+                    "customStyle": "style=\"color:red;\""
+                    }
+
+        else:
+            body = {"requestor": f"{trx.shop}", 
+                    "correlationId": trx.correlationId,
+                    "locale": f"{self._getLocale()}",
+                    "successCallbackUrl": f"{self._getSuccessUrl()}",
+                    "failureCallbackUrl": f"{self._getFailureUrl()}",
+                    "pendingCallbackUrl": f"{self._getPendingUrl()}",
+                    "notifyCallbackUrl": f"{self._getNotifyUrl()}",
+                    "customStyle": "style=\"color:red;\""
+                    }
 
         self.logger.debug(featureURL + " " + json.dumps(body))
         resp = self.put(self._url(featureURL), 
