@@ -56,13 +56,49 @@ class Pgs(Restful):
     def _getCorrelationId(self):
         return getattr(self.config, "provider_correlationId")
 
+    def _getReason(self):
+        return getattr(self.config, "provider_reason")
+
     def get_shopping_cart(self, trx, tokenReq):
         trx.shop = self._getShop()
         trx.shopInfo = self._getShopInfo()
         trx.currency = self._getCurrency()
         trx.correlationId = self._getCorrelationId()
+        trx.reason = self._getReason()
         featureURL = "/paymentcart/{tenant}".format(tenant=self._getTenant())
-        body = {"requestor": f"{trx.shop}", 
+
+        if (self._getPendingUrl == "" & self._getNotifyUrl == ""):
+            body = {"requestor": f"{trx.shop}", 
+                "correlationId": trx.correlationId,
+                "amount": trx.amount,
+                "currency": trx.currency,
+                "reason": trx.reason,
+                "reference": trx.reference,
+                "successCallbackUrl": f"{self._getSuccessUrl()}",
+                "failureCallbackUrl": f"{self._getFailureUrl()}",
+                # "pendingCallbackUrl": f"{self._getPendingUrl()}",
+                # "notifyCallbackUrl": f"{self._getNotifyUrl()}",
+                "customStyle": "style=\"color:red;\"",
+                "tokenRequired": tokenReq
+                }
+
+        elif (self._getPendingUrl == ""):
+            body = {"requestor": f"{trx.shop}", 
+                "correlationId": trx.correlationId,
+                "amount": trx.amount,
+                "currency": trx.currency,
+                "reason": trx.reason,
+                "reference": trx.reference,
+                "successCallbackUrl": f"{self._getSuccessUrl()}",
+                "failureCallbackUrl": f"{self._getFailureUrl()}",
+                # "pendingCallbackUrl": f"{self._getPendingUrl()}",
+                "notifyCallbackUrl": f"{self._getNotifyUrl()}",
+                "customStyle": "style=\"color:red;\"",
+                "tokenRequired": tokenReq
+                }
+
+        elif (self._getNotifyUrl == ""):
+            body = {"requestor": f"{trx.shop}", 
                 "correlationId": trx.correlationId,
                 "amount": trx.amount,
                 "currency": trx.currency,
@@ -71,10 +107,11 @@ class Pgs(Restful):
                 "successCallbackUrl": f"{self._getSuccessUrl()}",
                 "failureCallbackUrl": f"{self._getFailureUrl()}",
                 "pendingCallbackUrl": f"{self._getPendingUrl()}",
-                "notifyCallbackUrl": f"{self._getNotifyUrl()}",
+                # "notifyCallbackUrl": f"{self._getNotifyUrl()}",
                 "customStyle": "style=\"color:red;\"",
                 "tokenRequired": tokenReq
                 }
+
 
         self.logger.debug(featureURL + " " + json.dumps(body))
         resp = self.put(self._url(featureURL), 
@@ -93,6 +130,7 @@ class Pgs(Restful):
         trx.shopInfo = self._getShopInfo()
         trx.currency = self._getCurrency()
         trx.correlationId = self._getCorrelationId()
+        trx.reason = self._getReason()
         featureURL = "/tokencart/{tenant}".format(tenant=self._getTenant())
         body = {"requestor": f"{trx.shop}", 
                 "correlationId": trx.correlationId,
@@ -209,10 +247,12 @@ class Pgs(Restful):
         return trx
 
     def do_refund_cart(self, trx):
+        trx.reason = self._getReason()
+
         featureURL = "/refund/full/{tenant}/{cart}/{reason}".format(
             tenant=self._getTenant(),
             cart=trx.shoppingCartUuid,
-            reason="RF00_WA"
+            reason=trx.reason
         )
 
         self.logger.debug(featureURL)

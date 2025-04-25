@@ -30,17 +30,18 @@ development:
     costCentre: 2014615
     imageColor: false
     correlationId: RF05_NA_WA
+    reason: AS00
 
 production:
   log_level: debug
   log_file_path: ./inout.log
   web_port: 80
   provider:
-    tenant: pgs-testDummy
+    tenant: pgs-testNMI
     shop: shop-RepSql
     shopInfo: Priemyselna 14, Zilina
-    host: http://localhost:8080
-    baseURL: /pgs/public/api/payment
+    #host: http://localhost:8080
+    #baseURL: /pgs/public/api/payment
 
     # IBM cloud
     # host: https://preprod-entervo-connectv2.scheidt-bachmann.net:8443
@@ -63,3 +64,4 @@ production:
     costCentre: 2014615
     imageColor: true
     correlationId: RS00
+    reason: AS00

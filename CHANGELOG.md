@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+## [1.3.1](https://github.com/udigeri/inout/compare/v1.3.0..v1.3.1) (2025-04-25)
+
+### Added
+- correlationId
+- reason read from config
+
+### Changed
+
 ## [1.3.0](https://github.com/udigeri/inout/compare/v1.2.1..v1.3.0) (2025-03-18)
 
 ### Added
